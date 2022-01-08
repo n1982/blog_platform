@@ -1,70 +1,61 @@
-# Getting Started with Create React App
+# Блог-платформа 
+Наша задача в этом курсе - реализовать блог-платформу. 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Проект реализуем целиком с использованием react hooks.
 
-## Available Scripts
+#### Корневой URL для API: http://kata.academy:8022/
 
-In the project directory, you can run:
+### Страницы
 
-### `npm start`
+- / и /articles - список всех статей. При клике на заголовок - переход на страницу статьи. Кнопка лайка не активна, т.к. мы не авторизованы.
+- /articles/{slug} - Просмотр статьи с полным текстом.
+- /sign-in - Страница входа.
+- /sign-up - Страница регистрации.
+- /profile - Страница редактирования информации пользователя (см. метод Update User). Переход на эту страницу происходит по клике на имени-аватарке в шапке.
+- /new-article - Страница создания статьи. При переходе по этой ссылке без аутентификации - перебрасывает на страницу логина (см. паттерн Private Route)
+- /articles/{slug}/edit - Страница редактирования статьи.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Задание
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- Реализуйте страницу со списком статей
+- Сделайте пагинацию. Пагинация статей должна быть на стороне сервера - при смене страницы отправляем новый запрос. 
+- Не забываем индикаторы загрузки и обработку ошибок.
+- Реализуйте страницу одной статьи. Обратите внимание, что полный текст статьи - это Markdown разметка, найдите подходящий модуль для вывода содержимого на экран.
+- Используйте react-router для навигации по страницам.
+- Добавим механизм аутентификации, регистрации и редактирования профиля.
+    - Создайте страницы входа и регистрации и настройте роутинг (используем react-router v5)??
+    - Сделайте форму регистрации
+    - Сделайте форму логина
+    - Сделайте отображение данных пользователя в шапке
+    - Настройте клиентскую валидацию и обработку ошибок сервера (см ниже подробности)
+    - Настройте, чтобы при перезагрузке страницы залогиненный пользователь сохранялся, сделайте функционал Log Out
+    - Реализуйте страницу редактирования профиля (переход на эту страницу - по клику на имени/аватаре пользователя в шапке.
+- Добавьте страницу создания статьи. Правила валидации - title, short description и text обязательны для заполнения.
+- Добавьте страницу редактирования статьи. Реиспользуйте форму, использующуюся при создании.
+- Добавьте кнопки редактирования/удаления на странице статьи. Сделайте подтверждение на действие удаления.
+-  На странице отображения статьи добавляем кнопки Edit и Delete. По нажатию на Edit происходит переход на страницу редактирования, по Delete - открытие модалки подтверждения и запрос на удаление статьи.
 
-### `npm test`
+#### Валидация
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Для клиентской валидации форм воспользуемся библиотекой React Hook Form.
 
-### `npm run build`
+#### Регистрация (все поля обязательны):
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+ - email должен быть корректным почтовым адресом
+ - username должен быть от 3 до 20 символов (включительно)
+ - password должен быть от 6 до 40 символов (включительно)
+ - password и repeat password должны совпадать
+ - галочка согласия с обработкой персональных данных должна быть отмечена
+ 
+##### Логин:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+ - email должен быть не пустой, должен быть корректным почтовым адресом
+ - password должен быть не пустой
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+##### Редактирование профиля:
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+ - username не должен быть пустым
+ - email должен быть корректным почтовым адресом, не должен быть пустым
+ - new password должен быть от 6 до 40 символом
+ - avatar image должен быть корректным url
+ - Серверные ошибки должны нормально подсвечивать соответствующие поля.
