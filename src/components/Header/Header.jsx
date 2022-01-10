@@ -11,13 +11,17 @@ import './Header.scss';
 const Header = () => {
   console.log('header');
   return (
-    <AppBar position="static" color="inherit">
+    <AppBar position="static" color="inherit" sx={{ 'box-shadow': 'unset' }}>
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           Realworld Blog
         </Typography>
-        <Button color="inherit">Sign In</Button>
-        <Button color="inherit">Sign Up</Button>
+        <Button color="inherit" sx={{ textTransform: 'none', mr: 3 }}>
+          Sign In
+        </Button>
+        <Button color="success" variant="outlined" sx={{ textTransform: 'none' }}>
+          Sign Up
+        </Button>
       </Toolbar>
     </AppBar>
   );
