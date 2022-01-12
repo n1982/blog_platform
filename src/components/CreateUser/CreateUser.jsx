@@ -12,6 +12,8 @@ import {
   Typography,
 } from '@mui/material';
 
+import './CreateUser.scss';
+
 const CreateUser = () => {
   console.log('CreateUser');
 
