@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container } from '@mui/material';
 
-import ArticleList from '../ArticleList';
+import Article from '../Article';
 
 import './Main.scss';
 
@@ -9,7 +9,7 @@ const Main = () => {
   console.log('Main');
   return (
     <Container sx={{ mt: '1rem' }}>
-      <ArticleList />
+      <Article />
     </Container>
   );
 };
