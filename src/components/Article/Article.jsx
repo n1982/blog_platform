@@ -18,10 +18,12 @@ const Article = () => {
             <Typography variant="h5" color="#1890FF" sx={{ mr: '5px' }}>
               Some article title
             </Typography>
+            {/* todo заменить <Checkbox {...label} icon={<FavoriteBorder />} checkedIcon={<Favorite />} /> */}
             <FavoriteBorderRoundedIcon sx={{ mr: '5px' }} />
             <FavoriteRoundedIcon sx={{ mr: '5px', color: '#FF0707' }} />
             <Typography sx={{ mr: '5px' }}>12</Typography>
           </Grid>
+          {/* todo использовать "Chip" */}
           <Typography
             variant="caption"
             display="border-box"

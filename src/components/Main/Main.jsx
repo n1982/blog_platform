@@ -1,15 +1,14 @@
 import React from 'react';
 import { Container } from '@mui/material';
 
-import Article from '../Article';
-
 import './Main.scss';
+import CreateUser from '../CreateUser';
 
 const Main = () => {
   console.log('Main');
   return (
     <Container sx={{ mt: '1rem' }}>
-      <Article />
+      <CreateUser />
     </Container>
   );
 };
