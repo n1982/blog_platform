@@ -1,11 +1,10 @@
 import React from 'react';
 
-import { Avatar, Box, Button, Grid, Paper, Typography } from '@mui/material';
-import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
-import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
+import { Avatar, Box, Button, Checkbox, Grid, Paper, Typography } from '@mui/material';
+
+import { Favorite, FavoriteBorder } from '@mui/icons-material';
 
 import avatarPicture from '../../assets/img/Avatar.png';
-
 import './Article.scss';
 
 const Article = () => {
@@ -19,8 +18,7 @@ const Article = () => {
               Some article title
             </Typography>
             {/* todo заменить <Checkbox {...label} icon={<FavoriteBorder />} checkedIcon={<Favorite />} /> */}
-            <FavoriteBorderRoundedIcon sx={{ mr: '5px' }} />
-            <FavoriteRoundedIcon sx={{ mr: '5px', color: '#FF0707' }} />
+            <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} />
             <Typography sx={{ mr: '5px' }}>12</Typography>
           </Grid>
           {/* todo использовать "Chip" */}

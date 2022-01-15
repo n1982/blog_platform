@@ -8,7 +8,7 @@ import avatarPicture from '../../assets/img/Avatar.png';
 const Header = () => {
   console.log('header');
   return (
-    <AppBar position="fixed" color="inherit" sx={{ 'box-shadow': 'unset' }}>
+    <AppBar position="fixed" color="inherit" sx={{ boxShadow: 'unset' }}>
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           Realworld Blog

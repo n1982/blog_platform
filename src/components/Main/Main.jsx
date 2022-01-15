@@ -2,13 +2,13 @@ import React from 'react';
 import { Container } from '@mui/material';
 
 import './Main.scss';
-import NewArticle from '../NewArticle';
+import ArticleList from '../ArticleList';
 
 const Main = () => {
   console.log('Main');
   return (
-    <Container sx={{ mt: '1rem' }}>
-      <NewArticle />
+    <Container sx={{ mt: '100px' }}>
+      <ArticleList />
     </Container>
   );
 };
