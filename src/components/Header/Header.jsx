@@ -2,17 +2,13 @@
 import React from 'react';
 
 import { AppBar, Avatar, Button, Toolbar, Typography } from '@mui/material';
-// import Box from '@mui/material/Box';
-// import Toolbar from '@mui/material/Toolbar';
-// import Typography from '@mui/material/Typography';
-// import Button from '@mui/material/Button';
 import './Header.scss';
 import avatarPicture from '../../assets/img/Avatar.png';
 
 const Header = () => {
   console.log('header');
   return (
-    <AppBar position="static" color="inherit" sx={{ 'box-shadow': 'unset' }}>
+    <AppBar position="fixed" color="inherit" sx={{ 'box-shadow': 'unset' }}>
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           Realworld Blog

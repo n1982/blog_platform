@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Avatar, Box, Grid, Paper, Typography } from '@mui/material';
+import { Avatar, Box, Button, Grid, Paper, Typography } from '@mui/material';
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 
@@ -49,6 +49,12 @@ const Article = () => {
               </Typography>
             </Box>
           </Grid>
+          <Button color="error" variant="outlined" sx={{ textTransform: 'none', mr: 1 }}>
+            Delete
+          </Button>
+          <Button color="success" variant="outlined" sx={{ textTransform: 'none' }}>
+            Edit
+          </Button>
         </Grid>
       </Grid>
       <Box>
