@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Avatar, Box, Checkbox, Grid, Pagination, Paper, Stack, Typography } from '@mui/material';
@@ -7,17 +7,20 @@ import { Avatar, Box, Checkbox, Grid, Pagination, Paper, Stack, Typography } fro
 import { Favorite, FavoriteBorder } from '@mui/icons-material';
 import avatarPicture from '../../assets/img/Avatar.png';
 import { fetchArticles } from '../../store/articleSlice';
+import paginationCount from '../../utilites/PaginationCount';
 
 const ArticleList = () => {
   console.log('article list');
   const dispatch = useDispatch();
+  const [offset, setOffset] = useState(0);
 
   useEffect(() => {
     console.log('useEffect');
-    dispatch(fetchArticles({ limit: 20, offset: 10 }));
-  }, [dispatch]);
+    dispatch(fetchArticles({ limit: 5, offset }));
+  }, [dispatch, offset]);
 
   const articles = useSelector((state) => state.articles.articles);
+  const articlesCount = useSelector((state) => state.articles.articlesCount);
   console.log(articles);
   return (
     <>
@@ -77,7 +80,13 @@ const ArticleList = () => {
         })}
       </Stack>
       <Stack spacing={2} alignItems="center" sx={{ mt: 2 }}>
-        <Pagination count={10} shape="rounded" />
+        <Pagination
+          count={paginationCount(articlesCount)}
+          shape="rounded"
+          onChange={(_, num) => {
+            setOffset((num - 1) * 5);
+          }}
+        />
       </Stack>
     </>
   );

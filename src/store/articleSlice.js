@@ -4,8 +4,9 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 export const fetchArticles = createAsyncThunk(
   'articles/fetchArticles',
   async ({ limit, offset }, { rejectWithValue }) => {
+    console.log('offset', offset);
     try {
-      const res = await fetch(`http://kata.academy:8022/api/articles?limit=${limit}&${offset}`);
+      const res = await fetch(`http://kata.academy:8022/api/articles?limit=${limit}&offset=${offset}`);
       if (!res.ok) {
         throw new Error(`${res.status}`);
       }
@@ -20,12 +21,13 @@ const articleSlice = createSlice({
   name: 'articles',
   initialState: {
     articles: [],
-    tags: [],
+    articlesCount: null,
   },
   reducers: {},
   extraReducers: {
     [fetchArticles.fulfilled]: (state, action) => {
-      state.articles = [...state.articles, ...action.payload.articles];
+      state.articles = [...action.payload.articles];
+      state.articlesCount = action.payload.articlesCount;
     },
     [fetchArticles.rejected]: () => {
       console.log('Error!');
