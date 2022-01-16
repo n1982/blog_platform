@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Box, Button, Link, Paper, TextField, Typography } from '@mui/material';
-import { fetchLoginUser } from '../../store/userSlice';
-import './LoginUser.scss';
+import { fetchLoginUser } from '../store/userSlice';
 
 const LoginUser = () => {
   const dispatch = useDispatch();

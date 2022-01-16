@@ -1,20 +1,7 @@
 import React from 'react';
-import {
-  Box,
-  Button,
-  Checkbox,
-  Divider,
-  FormControlLabel,
-  FormGroup,
-  Link,
-  Paper,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Paper, TextField, Typography } from '@mui/material';
 
-import './CreateUser.scss';
-
-const CreateUser = () => {
+const EditProfile = () => {
   console.log('CreateUser');
 
   return (
@@ -38,7 +25,7 @@ const CreateUser = () => {
             mb: 1,
           }}
         >
-          Create new account
+          Edit Profile
         </Typography>
         <Typography>Username</Typography>
         <TextField
@@ -62,10 +49,10 @@ const CreateUser = () => {
             mb: 1,
           }}
         />
-        <Typography>Password</Typography>
+        <Typography>New password</Typography>
         <TextField
           id="outlined-basic"
-          label="Password"
+          label="New password"
           variant="outlined"
           size="small"
           fullWidth
@@ -73,49 +60,24 @@ const CreateUser = () => {
             mb: 1,
           }}
         />
-        <Typography>Repeat Password</Typography>
+        <Typography>Avatar image (url)</Typography>
         <TextField
           id="outlined-basic"
-          label="Password"
+          label="Avatar image (url)"
           variant="outlined"
           size="small"
           fullWidth
           sx={{
-            mb: 2,
+            mb: 3,
           }}
         />
-        <Divider
-          sx={{
-            mb: 1,
-          }}
-        />
-        <FormGroup
-          sx={{
-            mb: 2,
-          }}
-        >
-          <FormControlLabel
-            control={<Checkbox defaultChecked />}
-            label="I agree to the processing of my personal
-information"
-          />
-        </FormGroup>
-        <Button
-          variant="contained"
-          fullWidth
-          sx={{
-            mb: 2,
-          }}
-        >
-          Create
-        </Button>
 
-        <Typography variant="body2" justify="center" align="center">
-          Already have an account? <Link>Sign In</Link>.
-        </Typography>
+        <Button variant="contained" fullWidth>
+          Save
+        </Button>
       </Paper>
     </Box>
   );
 };
 
-export default CreateUser;
+export default EditProfile;

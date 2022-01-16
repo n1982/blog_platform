@@ -1,18 +1,26 @@
-// eslint-disable-next-line no-unused-vars
 import React from 'react';
-import { Box, Button, Divider, Paper, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Checkbox,
+  Divider,
+  FormControlLabel,
+  FormGroup,
+  Link,
+  Paper,
+  TextField,
+  Typography,
+} from '@mui/material';
 
-import './NewArticle.scss';
-
-const NewArticle = () => {
-  console.log('NewArticle');
+const CreateUser = () => {
+  console.log('CreateUser');
 
   return (
     <Box
       sx={{
         m: 'auto',
         mt: 10,
-        maxWidth: '1440px',
+        maxWidth: 384,
       }}
     >
       <Paper
@@ -28,12 +36,12 @@ const NewArticle = () => {
             mb: 1,
           }}
         >
-          Create new article
+          Create new account
         </Typography>
-        <Typography>Title</Typography>
+        <Typography>Username</Typography>
         <TextField
           id="outlined-basic"
-          label="Title"
+          label="Username"
           variant="outlined"
           size="small"
           fullWidth
@@ -41,10 +49,10 @@ const NewArticle = () => {
             mb: 1,
           }}
         />
-        <Typography>Short description</Typography>
+        <Typography>Email address</Typography>
         <TextField
           id="outlined-basic"
-          label="Short description"
+          label="Email address"
           variant="outlined"
           size="small"
           fullWidth
@@ -52,62 +60,60 @@ const NewArticle = () => {
             mb: 1,
           }}
         />
-        <Typography>Text</Typography>
+        <Typography>Password</Typography>
         <TextField
           id="outlined-basic"
-          label="Text"
+          label="Password"
           variant="outlined"
           size="small"
-          multiline
           fullWidth
           sx={{
             mb: 1,
           }}
         />
-        <Typography>Tags</Typography>
+        <Typography>Repeat Password</Typography>
         <TextField
           id="outlined-basic"
-          label="Tag"
+          label="Password"
           variant="outlined"
           size="small"
-          sx={{
-            mb: 1,
-          }}
-        />
-        <Button
-          variant="outlined"
-          color="error"
+          fullWidth
           sx={{
             mb: 2,
-            textTransform: 'none',
           }}
-        >
-          Delete
-        </Button>
-        <Button
-          variant="outlined"
+        />
+        <Divider
+          sx={{
+            mb: 1,
+          }}
+        />
+        <FormGroup
           sx={{
             mb: 2,
-            textTransform: 'none',
           }}
         >
-          Add Tag
-        </Button>
-
-        <Divider />
+          <FormControlLabel
+            control={<Checkbox defaultChecked />}
+            label="I agree to the processing of my personal
+information"
+          />
+        </FormGroup>
         <Button
           variant="contained"
+          fullWidth
           sx={{
             mb: 2,
-            textTransform: 'none',
-            width: '50%',
           }}
         >
-          Send
+          Create
         </Button>
+
+        <Typography variant="body2" justify="center" align="center">
+          Already have an account? <Link>Sign In</Link>.
+        </Typography>
       </Paper>
     </Box>
   );
 };
 
-export default NewArticle;
+export default CreateUser;
