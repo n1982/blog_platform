@@ -12,8 +12,8 @@ import {
   Typography,
 } from '@mui/material';
 
-const CreateUser = () => {
-  console.log('CreateUser');
+const SignUp = () => {
+  console.log('SignUp');
 
   return (
     <Box
@@ -116,4 +116,4 @@ information"
   );
 };
 
-export default CreateUser;
+export default SignUp;

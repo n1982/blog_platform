@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { Box, Button, Paper, TextField, Typography } from '@mui/material';
 import { fetchLoginUser } from '../store/userSlice';
 
-const LoginUser = () => {
+const SignIn = () => {
   const dispatch = useDispatch();
 
-  console.log('LoginUser');
+  console.log('SignIn');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const fromPage = location.state?.from?.pathname || '/';
+  console.log('frompage', fromPage);
   return (
     <Box
       sx={{
@@ -76,6 +80,7 @@ const LoginUser = () => {
               dispatch(fetchLoginUser({ email, password }));
               setEmail('');
               setPassword('');
+              navigate(fromPage, { replace: true });
             }}
           >
             Login
@@ -90,4 +95,4 @@ const LoginUser = () => {
   );
 };
 
-export default LoginUser;
+export default SignIn;
