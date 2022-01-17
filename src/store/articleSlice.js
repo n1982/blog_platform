@@ -1,4 +1,4 @@
-/* eslint-disable no-param-reassign */
+/* eslint-disable no-param-reassign,arrow-body-style */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
@@ -6,7 +6,7 @@ export const fetchArticles = createAsyncThunk(
   'articles/fetchArticles',
   async ({ limit, offset }, { rejectWithValue }) =>
     axios
-      .get(`http://kata.academy:8022/api/articles`, {
+      .get(`https://kata.academy:8021/api/articles`, {
         params: {
           limit,
           offset,
@@ -14,32 +14,35 @@ export const fetchArticles = createAsyncThunk(
       })
       .then((res) => res.data)
       .catch((err) => rejectWithValue(err.message))
-
-  /* try {
-      const res = await fetch(`http://kata.academy:8022/api/articles?limit=${limit}&offset=${offset}`);
-      if (!res.ok) {
-        throw new Error(`${res.status}`);
-      }
-      return await res.json();
-    } catch (err) {
-      return rejectWithValue(err.message);
-    } */
+);
+export const fetchSingleArticle = createAsyncThunk('articles/fetchSingleArticle', async (slug, { rejectWithValue }) =>
+  axios
+    .get(`https://kata.academy:8021/api/articles/${slug}`)
+    .then((res) => res.data)
+    .catch((err) => rejectWithValue(err.message))
 );
 
 const articleSlice = createSlice({
   name: 'articles',
   initialState: {
     articles: [],
+    singleArticle: null,
     articlesCount: null,
   },
   reducers: {},
   extraReducers: {
     [fetchArticles.fulfilled]: (state, action) => {
-      console.log('Action', action);
       state.articles = [...action.payload.articles];
       state.articlesCount = action.payload.articlesCount;
     },
+    [fetchSingleArticle.fulfilled]: (state, action) => {
+      state.singleArticle = { ...action.payload.article };
+    },
+
     [fetchArticles.rejected]: () => {
+      console.log('Error!');
+    },
+    [fetchSingleArticle.rejected]: () => {
       console.log('Error!');
     },
   },

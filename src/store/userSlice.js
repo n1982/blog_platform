@@ -9,7 +9,7 @@ export const fetchLoginUser = createAsyncThunk(
     console.log('Запрос начат');
     return axios
       .post(
-        `http://kata.academy:8022/api/users/login`,
+        `https://kata.academy:8021/api/users/login`,
         {
           user: {
             email,
@@ -30,13 +30,19 @@ export const fetchLoginUser = createAsyncThunk(
 const userSlice = createSlice({
   name: 'user',
   initialState: {
-    user: {},
+    username: '',
+    email: '',
+    bio: '',
+    image: '',
   },
   reducers: {},
   extraReducers: {
     [fetchLoginUser.fulfilled]: (state, action) => {
-      console.log('Action', action);
-      state.user = action.payload.user;
+      state.username = action.payload.user.username;
+      state.email = action.payload.user.email;
+      state.bio = action.payload.user.bio;
+      state.image = action.payload.user.image;
+      document.cookie = `token = ${action.payload.user.token}`;
     },
     [fetchLoginUser.rejected]: (err) => {
       console.log(err.target);

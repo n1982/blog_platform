@@ -12,7 +12,7 @@ const Header = () => {
     <AppBar position="fixed" color="inherit" sx={{ boxShadow: 'unset' }}>
       <Toolbar>
         <Link style={{ textDecoration: 'none', flexGrow: 1 }} to="/articles">
-          <Typography color="black" variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography color="black" variant="h6" component="div">
             Realworld Blog
           </Typography>
         </Link>

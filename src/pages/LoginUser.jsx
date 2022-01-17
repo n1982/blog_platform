@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { Box, Button, Link, Paper, TextField, Typography } from '@mui/material';
+import { Box, Button, Paper, TextField, Typography } from '@mui/material';
 import { fetchLoginUser } from '../store/userSlice';
 
 const LoginUser = () => {
@@ -19,11 +20,7 @@ const LoginUser = () => {
       }}
     >
       <form>
-        <Paper
-          sx={{
-            p: 5,
-          }}
-        >
+        <Paper sx={{ p: 5 }}>
           <Typography
             variant="h6"
             justify="center"
@@ -52,6 +49,7 @@ const LoginUser = () => {
           />
           <Typography>Password</Typography>
           <TextField
+            type="password"
             id="password"
             label="Password"
             value={password}
@@ -76,13 +74,15 @@ const LoginUser = () => {
             onClick={(e) => {
               e.preventDefault();
               dispatch(fetchLoginUser({ email, password }));
+              setEmail('');
+              setPassword('');
             }}
           >
             Login
           </Button>
 
           <Typography variant="body2" justify="center" align="center">
-            Don’t have an account? <Link>Sign Up</Link>.
+            Don’t have an account? <Link to="/sign-up">Sign Up</Link>.
           </Typography>
         </Paper>
       </form>
