@@ -14,7 +14,7 @@ const SignIn = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const fromPage = location.state?.from?.pathname || '/';
-  console.log('frompage', fromPage);
+
   return (
     <Box
       sx={{

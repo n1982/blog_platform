@@ -1,14 +1,27 @@
-/* eslint-disable arrow-body-style */
 import React from 'react';
 
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppBar, Avatar, Button, Grid, Toolbar, Typography } from '@mui/material';
 
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import avatarPicture from '../../assets/img/Avatar.png';
+import { logOut } from '../../store/userSlice';
 
 const Header = () => {
+  const dispatch = useDispatch();
   const auth = useSelector((state) => state.user.email);
+
+  // создать хук useRedirectFromPage
+  const navigate = useNavigate();
+  const location = useLocation();
+  const fromPage = location.state?.from?.pathname || '/';
+
+  const handleLogOutClick = () => {
+    dispatch(logOut());
+
+    navigate(fromPage, { replace: true });
+  };
+
   return (
     <AppBar position="fixed" color="inherit" sx={{ boxShadow: 'unset' }}>
       <Toolbar>
@@ -21,7 +34,9 @@ const Header = () => {
         {/* Отображается когда пользователь залогинился */}
         {auth && (
           <Button color="success" variant="outlined" sx={{ textTransform: 'none' }}>
-            Create article
+            <Link style={{ textDecoration: 'none', flexGrow: 1 }} to="/new-article">
+              Create article
+            </Link>
           </Button>
         )}
         {/* Отображается когда пользователь залогинился */}
@@ -46,7 +61,7 @@ const Header = () => {
 
         {/* Отображается когда пользователь залогинился */}
         {auth && (
-          <Button color="inherit" variant="outlined" sx={{ textTransform: 'none' }}>
+          <Button color="inherit" variant="outlined" sx={{ textTransform: 'none' }} onClick={handleLogOutClick}>
             Log Out
           </Button>
         )}

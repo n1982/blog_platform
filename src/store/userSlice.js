@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign,arrow-body-style */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import deleteCookie from '../utilites/deleteCookie';
 
 export const fetchLoginUser = createAsyncThunk(
   'user/fetchLoginUser',
@@ -35,7 +36,16 @@ const userSlice = createSlice({
     bio: '',
     image: '',
   },
-  reducers: {},
+  reducers: {
+    logOut(state) {
+      console.log('Log out user');
+      deleteCookie('token');
+      state.username = '';
+      state.email = '';
+      state.bio = '';
+      state.image = '';
+    },
+  },
   extraReducers: {
     [fetchLoginUser.fulfilled]: (state, action) => {
       state.username = action.payload.user.username;
@@ -51,6 +61,6 @@ const userSlice = createSlice({
 });
 
 // eslint-disable-next-line no-empty-pattern
-export const {} = userSlice.actions;
+export const { logOut } = userSlice.actions;
 
 export default userSlice.reducer;
