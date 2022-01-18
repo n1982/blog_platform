@@ -4,11 +4,11 @@ import ArticleList from '../../pages/ArticleList';
 import SignIn from '../../pages/SignIn';
 import SignUp from '../../pages/SignUp';
 import EditProfile from '../../pages/EditProfile';
-import NewArticle from '../../pages/NewArticle';
+import CreateArticle from '../../pages/CreateArticle';
 import NotFound from '../../pages/NotFound';
 import Layout from '../Layout';
-import EditArticle from '../EditArticle';
 import SingleArticle from '../../pages/SingleArticle';
+import EditArticle from '../../pages/EditArticle';
 import RequireAuth from '../hoc/RequireAuth';
 
 const App = () => {
@@ -34,7 +34,7 @@ const App = () => {
           path="new-article"
           element={
             <RequireAuth>
-              <NewArticle />
+              <CreateArticle />
             </RequireAuth>
           }
         />

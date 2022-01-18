@@ -7,13 +7,20 @@ import { fetchLoginUser } from '../store/userSlice';
 const SignIn = () => {
   const dispatch = useDispatch();
 
-  console.log('SignIn');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const navigate = useNavigate();
   const location = useLocation();
   const fromPage = location.state?.from?.pathname || '/';
+
+  const handleClickSubmitButton = (event) => {
+    event.preventDefault();
+    dispatch(fetchLoginUser({ email, password }));
+    setEmail('');
+    setPassword('');
+    navigate(fromPage, { replace: true });
+  };
 
   return (
     <Box
@@ -75,12 +82,8 @@ const SignIn = () => {
             sx={{
               mb: 2,
             }}
-            onClick={(e) => {
-              e.preventDefault();
-              dispatch(fetchLoginUser({ email, password }));
-              setEmail('');
-              setPassword('');
-              navigate(fromPage, { replace: true });
+            onClick={(event) => {
+              handleClickSubmitButton(event);
             }}
           >
             Login

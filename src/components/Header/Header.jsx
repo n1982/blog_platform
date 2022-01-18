@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { AppBar, Avatar, Button, Grid, Toolbar, Typography } from '@mui/material';
+import { AppBar, Avatar, Button, Toolbar, Typography } from '@mui/material';
 
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import avatarPicture from '../../assets/img/Avatar.png';
@@ -18,7 +18,6 @@ const Header = () => {
 
   const handleLogOutClick = () => {
     dispatch(logOut());
-
     navigate(fromPage, { replace: true });
   };
 
@@ -66,14 +65,6 @@ const Header = () => {
           </Button>
         )}
       </Toolbar>
-      <Grid container direction="row" justifyContent="space-evenly" alignItems="center">
-        <Grid item>
-          <Link to="/new-article">Новая статья</Link>
-        </Grid>
-        <Grid item>
-          <Link to="/articles/{slug}/edit">Изменение статьи</Link>
-        </Grid>
-      </Grid>
     </AppBar>
   );
 };
