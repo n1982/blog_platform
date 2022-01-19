@@ -6,8 +6,7 @@ import deleteCookie from '../utilites/deleteCookie';
 export const fetchLoginUser = createAsyncThunk(
   'user/fetchLoginUser',
   // eslint-disable-next-line no-unused-vars
-  async ({ email, password }, { rejectWithValue }) => {
-    console.log('Запрос начат');
+  async ({ email, password }, { _, rejectWithValue }) => {
     return axios
       .post(
         `https://kata.academy:8021/api/users/login`,
@@ -28,6 +27,31 @@ export const fetchLoginUser = createAsyncThunk(
   }
 );
 
+export const fetchCreateUser = createAsyncThunk(
+  'user/fetchCreateUser',
+  // eslint-disable-next-line no-unused-vars
+  async ({ username, email, password }, { _, rejectWithValue }) => {
+    console.log('Incoming data', username, email, password);
+    return axios
+      .post(
+        `https://kata.academy:8021/api/users`,
+        {
+          user: {
+            username,
+            email,
+            password,
+          },
+        },
+        {
+          headers: { 'Content-Type': 'application/json' },
+        }
+      )
+      .then((res) => res.data)
+      .catch((err) => {
+        rejectWithValue(err);
+      });
+  }
+);
 const userSlice = createSlice({
   name: 'user',
   initialState: {
@@ -38,7 +62,6 @@ const userSlice = createSlice({
   },
   reducers: {
     logOut(state) {
-      console.log('Log out user');
       deleteCookie('token');
       state.username = '';
       state.email = '';
@@ -54,8 +77,16 @@ const userSlice = createSlice({
       state.image = action.payload.user.image;
       document.cookie = `token = ${action.payload.user.token}`;
     },
-    [fetchLoginUser.rejected]: (err) => {
-      console.log(err.target);
+    [fetchCreateUser.fulfilled]: () => {
+      console.log('user created, successful');
+    },
+
+    [fetchLoginUser.rejected]: () => {
+      console.log('User not logged in, error!!!');
+    },
+
+    [fetchCreateUser.rejected]: () => {
+      console.log('User not created, error!!!');
     },
   },
 });
