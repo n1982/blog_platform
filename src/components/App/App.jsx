@@ -39,7 +39,7 @@ const App = () => {
           }
         />
         <Route
-          path="article/:slug/edit"
+          path="articles/:slug/edit"
           element={
             <RequireAuth>
               <EditArticle />

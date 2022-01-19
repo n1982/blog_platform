@@ -1,16 +1,24 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 
-import { Avatar, Box, Checkbox, Chip, Grid, Typography } from '@mui/material';
-
-import { Favorite, FavoriteBorder } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
-import avatarPicture from '../../assets/img/Avatar.png';
-import './ArticlePreview.scss';
+import { useSelector } from 'react-redux';
+
+import { Avatar, Box, Button, Checkbox, Chip, Grid, Typography } from '@mui/material';
+import { Favorite, FavoriteBorder } from '@mui/icons-material';
+
 import formatDate from '../../utilites/formatDate';
 
+import avatarPicture from '../../assets/img/Avatar.png';
+
 const ArticlePreview = (props) => {
-  const { article } = props;
+  const { article, singlePage } = props;
+
+  const userCreatorArticle = article.author.username;
+  const userLoggedIn = useSelector((state) => state.user.username);
+
+  console.log('article', singlePage);
+
   return (
     <Grid container columnSpacing={2}>
       <Grid item xs={10}>
@@ -42,13 +50,21 @@ const ArticlePreview = (props) => {
             </Typography>
           </Box>
         </Grid>
-        {/* <Button color="error" variant="outlined" sx={{ textTransform: 'none', mr: 1 }}>
+
+        {/* отображать если пользователь создал статью */}
+        {singlePage && userLoggedIn === userCreatorArticle && (
+          // eslint-disable-next-line react/jsx-curly-brace-presence
+          <Link to={`edit`}>
+            <Button color="success" variant="outlined" sx={{ textTransform: 'none' }}>
+              Edit
+            </Button>
+          </Link>
+        )}
+        {singlePage && userLoggedIn === userCreatorArticle && (
+          <Button color="error" variant="outlined" sx={{ textTransform: 'none', mr: 1 }}>
             Delete
           </Button>
-
-          <Button color="success" variant="outlined" sx={{ textTransform: 'none' }}>
-            Edit
-          </Button> */}
+        )}
       </Grid>
     </Grid>
   );

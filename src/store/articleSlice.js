@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import getCookie from '../utilites/getCookie';
 
-export const fetchArticles = createAsyncThunk(
+export const fetchGetArticles = createAsyncThunk(
   'articles/fetchArticles',
   async ({ limit, offset }, { rejectWithValue }) =>
     axios
@@ -49,6 +49,38 @@ export const fetchCreateArticle = createAsyncThunk(
   }
 );
 
+export const fetchEditArticle = createAsyncThunk(
+  'articles/fetchEditArticle',
+  async ({ slug, title, description, body, tagList }, { rejectWithValue }) => {
+    axios
+      .put(
+        `https://kata.academy:8021/api/articles/${slug}`,
+        {
+          article: {
+            title,
+            description,
+            body,
+            tagList,
+          },
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Token ${getCookie('token')}`,
+          },
+        }
+      )
+      .then((res) => res.data)
+      .catch((err) => rejectWithValue(err.message));
+  }
+);
+
+export const fetchDeleteArticle = createAsyncThunk('articles/fetchSingleArticle', async (slug, { rejectWithValue }) =>
+  axios
+    .get(`https://kata.academy:8021/api/articles/${slug}`)
+    .then((res) => res.data)
+    .catch((err) => rejectWithValue(err.message))
+);
 const articleSlice = createSlice({
   name: 'articles',
   initialState: {
@@ -58,24 +90,33 @@ const articleSlice = createSlice({
   },
   reducers: {},
   extraReducers: {
-    [fetchArticles.fulfilled]: (state, action) => {
+    [fetchGetArticles.fulfilled]: (state, action) => {
       state.articles = [...action.payload.articles];
       state.articlesCount = action.payload.articlesCount;
     },
     [fetchSingleArticle.fulfilled]: (state, action) => {
       state.singleArticle = { ...action.payload.article };
     },
+
     [fetchCreateArticle.fulfilled]: () => {
       console.log('article created');
     },
 
-    [fetchArticles.rejected]: () => {
+    [fetchEditArticle.fulfilled]: () => {
+      console.log('article edit');
+    },
+
+    [fetchGetArticles.rejected]: () => {
       console.log('Articles list loading error!!!');
     },
     [fetchSingleArticle.rejected]: () => {
       console.log('Single article loading error!!!');
     },
     [fetchCreateArticle.rejected]: () => {
+      console.log('Article not created, error!!!');
+    },
+
+    [fetchEditArticle.rejected]: () => {
       console.log('Article not created, error!!!');
     },
   },

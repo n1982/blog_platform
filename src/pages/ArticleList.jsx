@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Pagination, Paper, Stack } from '@mui/material';
-import { fetchArticles } from '../store/articleSlice';
+import { fetchGetArticles } from '../store/articleSlice';
 import paginationCount from '../utilites/paginationCount';
 import ArticlePreview from '../components/ArticlePreview';
 
@@ -11,7 +11,7 @@ const ArticleList = () => {
   const [offset, setOffset] = useState(0);
 
   useEffect(() => {
-    dispatch(fetchArticles({ limit: 5, offset }));
+    dispatch(fetchGetArticles({ limit: 5, offset }));
   }, [dispatch, offset]);
 
   const articles = useSelector((state) => state.articles.articles);
