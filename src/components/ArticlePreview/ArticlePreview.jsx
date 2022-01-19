@@ -2,22 +2,26 @@
 import React from 'react';
 
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Avatar, Box, Button, Checkbox, Chip, Grid, Typography } from '@mui/material';
 import { Favorite, FavoriteBorder } from '@mui/icons-material';
 
-import formatDate from '../../utilites/formatDate';
+import { fetchDeleteArticle } from '../../store/articleSlice';
 
+import formatDate from '../../utilites/formatDate';
 import avatarPicture from '../../assets/img/Avatar.png';
 
 const ArticlePreview = (props) => {
+  const dispatch = useDispatch();
   const { article, singlePage } = props;
 
   const userCreatorArticle = article.author.username;
   const userLoggedIn = useSelector((state) => state.user.username);
 
-  console.log('article', singlePage);
+  const handleClickDelete = (slug) => {
+    dispatch(fetchDeleteArticle(slug));
+  };
 
   return (
     <Grid container columnSpacing={2}>
@@ -61,7 +65,12 @@ const ArticlePreview = (props) => {
           </Link>
         )}
         {singlePage && userLoggedIn === userCreatorArticle && (
-          <Button color="error" variant="outlined" sx={{ textTransform: 'none', mr: 1 }}>
+          <Button
+            color="error"
+            variant="outlined"
+            sx={{ textTransform: 'none', mr: 1 }}
+            onClick={() => handleClickDelete(article.slug)}
+          >
             Delete
           </Button>
         )}

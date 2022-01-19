@@ -75,9 +75,14 @@ export const fetchEditArticle = createAsyncThunk(
   }
 );
 
-export const fetchDeleteArticle = createAsyncThunk('articles/fetchSingleArticle', async (slug, { rejectWithValue }) =>
+export const fetchDeleteArticle = createAsyncThunk('articles/fetchDeleteArticle', async (slug, { rejectWithValue }) =>
   axios
-    .get(`https://kata.academy:8021/api/articles/${slug}`)
+    .delete(`https://kata.academy:8021/api/articles/${slug}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Token ${getCookie('token')}`,
+      },
+    })
     .then((res) => res.data)
     .catch((err) => rejectWithValue(err.message))
 );
@@ -106,6 +111,10 @@ const articleSlice = createSlice({
       console.log('article edit');
     },
 
+    [fetchDeleteArticle.fulfilled]: () => {
+      console.log('delete article successful');
+    },
+
     [fetchGetArticles.rejected]: () => {
       console.log('Articles list loading error!!!');
     },
@@ -115,9 +124,12 @@ const articleSlice = createSlice({
     [fetchCreateArticle.rejected]: () => {
       console.log('Article not created, error!!!');
     },
-
     [fetchEditArticle.rejected]: () => {
       console.log('Article not created, error!!!');
+    },
+
+    [fetchDeleteArticle.rejected]: () => {
+      console.log('Article not deleted, error!!!');
     },
   },
 });
