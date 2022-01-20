@@ -1,17 +1,54 @@
 import React from 'react';
-import Header from '../Header';
-
-import Main from '../Main';
-import './App.scss';
+import { Route, Routes } from 'react-router-dom';
+import ArticleList from '../../pages/ArticleList';
+import SignIn from '../../pages/SignIn';
+import SignUp from '../../pages/SignUp';
+import EditProfile from '../../pages/EditProfile';
+import CreateArticle from '../../pages/CreateArticle';
+import NotFound from '../../pages/NotFound';
+import Layout from '../Layout';
+import SingleArticle from '../../pages/SingleArticle';
+import EditArticle from '../../pages/EditArticle';
+import RequireAuth from '../hoc/RequireAuth';
 
 const App = () => {
   console.log('App');
 
   return (
-    <div className="App">
-      <Header />
-      <Main />
-    </div>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<ArticleList />} />
+        <Route path="articles" element={<ArticleList />} />
+        <Route path="articles/:slug" element={<SingleArticle />} />
+        <Route path="sign-in" element={<SignIn />} />
+        <Route path="sign-up" element={<SignUp />} />
+        <Route
+          path="profile"
+          element={
+            <RequireAuth>
+              <EditProfile />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="new-article"
+          element={
+            <RequireAuth>
+              <CreateArticle />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="articles/:slug/edit"
+          element={
+            <RequireAuth>
+              <EditArticle />
+            </RequireAuth>
+          }
+        />
+        <Route path="*" element={<NotFound />} />
+      </Route>
+    </Routes>
   );
 };
 
