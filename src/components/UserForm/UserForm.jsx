@@ -1,31 +1,18 @@
 import React, { useState } from 'react';
 import { Box, Button, Checkbox, Divider, FormControlLabel, Paper, TextField, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { fetchCreateUser } from '../../store/userSlice';
 
-const UserForm = () => {
-  const dispatch = useDispatch();
-  const signup = true;
-  const edit = false;
+const UserForm = (props) => {
+  const { signUp, user, handlerFormSubmit } = props || null;
+  const formTitle = signUp ? 'Create new account' : 'Edit profile';
+  const buttonLabel = signUp ? 'Create' : 'Save';
 
-  const [userName, setUserName] = useState('');
-  const [userEmail, setUserEmail] = useState('');
+  const [userName, setUserName] = useState(user?.username || '');
+  const [userEmail, setUserEmail] = useState(user?.email || '');
   const [password, setPassword] = useState('');
   const [passwordRepeat, setPasswordRepeat] = useState('');
-  const [avatarUrl, setAvatarUrl] = useState('');
-
+  const [avatarUrl, setAvatarUrl] = useState(user?.image || '');
   const [isChecked, setIsChecked] = useState(false);
-
-  const formTitle = 'Create new account';
-  const buttonLable = 'Create';
-  console.log('user from');
-
-  const handlerFormSubmit = (event) => {
-    event.preventDefault();
-    dispatch(fetchCreateUser({ username: userName, email: userEmail, password }));
-    console.log('form submit');
-  };
 
   return (
     <Box
@@ -35,7 +22,7 @@ const UserForm = () => {
         maxWidth: 384,
       }}
     >
-      <form onSubmit={(event) => handlerFormSubmit(event)}>
+      <form onSubmit={(event) => handlerFormSubmit(event, userName, userEmail, avatarUrl, password)}>
         <Paper
           sx={{
             p: 5,
@@ -79,8 +66,8 @@ const UserForm = () => {
               setUserEmail(event.target.value);
             }}
           />
-          {signup && <Typography>Password</Typography>}
-          {edit && <Typography>New password</Typography>}
+          {signUp && <Typography>Password</Typography>}
+          {!signUp && <Typography>New password</Typography>}
           <TextField
             id="password"
             value={password}
@@ -95,8 +82,8 @@ const UserForm = () => {
               setPassword(event.target.value);
             }}
           />
-          {signup && <Typography>Repeat Password</Typography>}
-          {signup && (
+          {signUp && <Typography>Repeat Password</Typography>}
+          {signUp && (
             <TextField
               id="password-repeat"
               value={passwordRepeat}
@@ -111,8 +98,8 @@ const UserForm = () => {
               }}
             />
           )}
-          {edit && <Typography>Avatar image (url)</Typography>}
-          {edit && (
+          {!signUp && <Typography>Avatar image (url)</Typography>}
+          {!signUp && (
             <TextField
               id="avatar-url"
               value={avatarUrl}
@@ -127,16 +114,20 @@ const UserForm = () => {
               }}
             />
           )}
-          <Divider
-            sx={{
-              mb: 1,
-            }}
-          />
-          <FormControlLabel
-            control={<Checkbox checked={isChecked} onClick={() => setIsChecked(!isChecked)} />}
-            label="I agree to the processing of my personal
+          {signUp && (
+            <Divider
+              sx={{
+                mb: 1,
+              }}
+            />
+          )}
+          {signUp && (
+            <FormControlLabel
+              control={<Checkbox checked={isChecked} onClick={() => setIsChecked(!isChecked)} />}
+              label="I agree to the processing of my personal
 information"
-          />
+            />
+          )}
 
           <Button
             type="submit"
@@ -146,12 +137,14 @@ information"
               mb: 2,
             }}
           >
-            {buttonLable}
+            {buttonLabel}
           </Button>
 
-          <Typography variant="body2" justify="center" align="center">
-            Already have an account? <Link to="/sign-in">Sign In</Link>.
-          </Typography>
+          {signUp && (
+            <Typography variant="body2" justify="center" align="center">
+              Already have an account? <Link to="/sign-in">Sign In</Link>.
+            </Typography>
+          )}
         </Paper>
       </form>
     </Box>

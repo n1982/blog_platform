@@ -10,6 +10,8 @@ import { logOut } from '../../store/userSlice';
 const Header = () => {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.user.email);
+  const userName = useSelector((state) => state.user.username) || 'Jon Doe';
+  const userAvatar = useSelector((state) => state.user.image) || avatarPicture;
 
   // создать хук useRedirectFromPage
   const navigate = useNavigate();
@@ -40,9 +42,9 @@ const Header = () => {
         )}
         {/* Отображается когда пользователь залогинился */}
         <Link to="/profile" style={{ textDecoration: 'none' }}>
-          {auth && <Typography variant="h6">John Doe</Typography>}
+          {auth && <Typography variant="h6">{userName}</Typography>}
           {/* Отображается когда пользователь залогинился */}
-          {auth && <Avatar alt="Avatar" src={avatarPicture} sx={{ width: 46, height: 46 }} />}
+          {auth && <Avatar alt="Avatar" src={userAvatar} sx={{ width: 46, height: 46 }} />}
         </Link>
         {!auth && (
           <Link to="/sign-in" style={{ textDecoration: 'none' }}>
