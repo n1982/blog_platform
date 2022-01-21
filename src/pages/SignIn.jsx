@@ -1,13 +1,24 @@
 import React from 'react';
+import * as Yup from 'yup';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+
 import { Box, Button, Paper, TextField, Typography } from '@mui/material';
+
 import { fetchLoginUser } from '../store/userSlice';
 
 const SignIn = () => {
   const dispatch = useDispatch();
 
+  //  Правила валидации
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().required('Поле "Email" должно быть заполнено').email('Email не верный'),
+    password: Yup.string()
+      .min(6, 'Поле "Password" не должно содержать менее 6 символов')
+      .required('Поле "Password" должно быть заполнено'),
+  });
   const {
     register,
     formState: { errors },
@@ -15,6 +26,7 @@ const SignIn = () => {
     reset,
   } = useForm({
     mode: 'onBlur',
+    resolver: yupResolver(validationSchema),
   });
 
   const navigate = useNavigate();
@@ -51,13 +63,6 @@ const SignIn = () => {
           <Typography>Email address</Typography>
 
           <TextField
-            {...register('email', {
-              required: 'Поле email обязательно к заполнению',
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: 'Не корректный email',
-              },
-            })}
             id="email"
             variant="outlined"
             size="small"
@@ -65,21 +70,13 @@ const SignIn = () => {
             sx={{
               mb: 1,
             }}
+            {...register('email')}
+            error={!!errors?.email}
+            helperText={errors?.email?.message}
           />
-          {errors?.email && <Typography>{errors?.email?.message}</Typography>}
+
           <Typography>Password</Typography>
           <TextField
-            {...register('password', {
-              required: 'Поле password обязательно к заполнению',
-              minLength: {
-                value: 6,
-                message: 'Пароль не может содержать менее 6 символов',
-              },
-              maxLength: {
-                value: 40,
-                message: 'Пароль не может содержать более 40 символов',
-              },
-            })}
             type="password"
             id="password"
             variant="outlined"
@@ -88,8 +85,10 @@ const SignIn = () => {
             sx={{
               mb: 3,
             }}
+            {...register('password')}
+            error={!!errors?.password}
+            helperText={errors?.password?.message}
           />
-          {errors?.password && <Typography>{errors?.password?.message}</Typography>}
 
           <Button
             type="submit"
