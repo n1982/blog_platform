@@ -21,8 +21,8 @@ const ArticleList = () => {
     <>
       <Stack spacing={2}>
         {articles.map((article) => (
-          <Paper sx={{ p: 1 }}>
-            <ArticlePreview key={article.slug} article={article} />
+          <Paper key={article.slug} sx={{ p: 1 }}>
+            <ArticlePreview article={article} />
           </Paper>
         ))}
       </Stack>

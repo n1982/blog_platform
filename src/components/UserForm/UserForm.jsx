@@ -1,19 +1,50 @@
-import React, { useState } from 'react';
+/* eslint-disable react/prop-types */
+import React from 'react';
 import { Box, Button, Checkbox, Divider, FormControlLabel, Paper, TextField, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 
-const UserForm = (props) => {
-  const { signUp, user, handlerFormSubmit } = props || null;
+const UserForm = ({ signUp, user, handlerFormSubmit }) => {
   const formTitle = signUp ? 'Create new account' : 'Edit profile';
   const buttonLabel = signUp ? 'Create' : 'Save';
 
-  const [userName, setUserName] = useState(user?.username || '');
-  const [userEmail, setUserEmail] = useState(user?.email || '');
-  const [password, setPassword] = useState('');
-  const [passwordRepeat, setPasswordRepeat] = useState('');
-  const [avatarUrl, setAvatarUrl] = useState(user?.image || '');
-  const [isChecked, setIsChecked] = useState(false);
+  const validationSchema = Yup.object().shape({
+    userName: Yup.string()
+      .required('Поле "Имя пользователя" должно быть заполнено')
+      .min(3, 'Имя пользователя не должно содержать менее 3 символов')
+      .max(20, 'Имя пользователя не должно содержать более 20 символов'),
+    email: Yup.string().required('Поле "Email" должно быть заполнено').email('Email не верный'),
+    password: Yup.string()
+      .min(6, 'Поле "Password" не должно содержать менее 6 символов')
+      .required('Поле "Password" должно быть заполнено'),
+    confirmPassword: Yup.string()
+      .required('Поле "Confirm Password" должно быть заполнено')
+      .oneOf([Yup.ref('password'), null], 'Passwords должны совпадать'),
+    acceptPersonalInf: Yup.bool().oneOf([true], 'Предоставьте согласие на обработку персональных данных'),
+    avatarUrl: Yup.string().url('Введите корректный URL'),
+  });
 
+  const {
+    // eslint-disable-next-line no-unused-vars
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm({
+    defaultValues: {
+      userName: user?.username,
+      email: user?.email,
+      avatarUrl: user?.image,
+    },
+    mode: 'onBlur',
+    resolver: yupResolver(validationSchema),
+  });
+
+  const onSubmit = (data) => {
+    handlerFormSubmit({ ...data });
+    // navigate(fromPage, { replace: true });
+  };
   return (
     <Box
       sx={{
@@ -22,7 +53,7 @@ const UserForm = (props) => {
         maxWidth: 384,
       }}
     >
-      <form onSubmit={(event) => handlerFormSubmit(event, userName, userEmail, avatarUrl, password)}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Paper
           sx={{
             p: 5,
@@ -38,80 +69,82 @@ const UserForm = (props) => {
           >
             {formTitle}
           </Typography>
-          <Typography>Username</Typography>
+
           <TextField
-            id="username"
-            value={userName}
+            id="userName"
+            label="User name"
             variant="outlined"
             size="small"
             fullWidth
+            required
             sx={{
               mb: 1,
             }}
-            onChange={(event) => {
-              setUserName(event.target.value);
-            }}
+            {...register('userName')}
+            error={!!errors?.userName}
+            helperText={errors?.userName?.message}
           />
-          <Typography>Email address</Typography>
+
           <TextField
             id="email"
-            value={userEmail}
+            type="email"
             variant="outlined"
+            label="Email address"
             size="small"
             fullWidth
+            required
             sx={{
               mb: 1,
             }}
-            onChange={(event) => {
-              setUserEmail(event.target.value);
-            }}
+            {...register('email')}
+            error={!!errors?.email}
+            helperText={errors?.email?.message}
           />
-          {signUp && <Typography>Password</Typography>}
-          {!signUp && <Typography>New password</Typography>}
+
           <TextField
             id="password"
-            value={password}
+            label={signUp ? 'Password' : 'New password'}
             type="password"
             variant="outlined"
             size="small"
             fullWidth
+            required
             sx={{
               mb: 1,
             }}
-            onChange={(event) => {
-              setPassword(event.target.value);
-            }}
+            {...register('password')}
+            error={!!errors?.password}
+            helperText={errors?.password?.message}
           />
-          {signUp && <Typography>Repeat Password</Typography>}
-          {signUp && (
-            <TextField
-              id="password-repeat"
-              value={passwordRepeat}
-              type="password"
-              size="small"
-              fullWidth
-              sx={{
-                mb: 2,
-              }}
-              onChange={(event) => {
-                setPasswordRepeat(event.target.value);
-              }}
-            />
-          )}
-          {!signUp && <Typography>Avatar image (url)</Typography>}
+
+          <TextField
+            id="confirmPassword"
+            label="Repeat password"
+            type="password"
+            size="small"
+            fullWidth
+            sx={{
+              mb: 2,
+            }}
+            {...register('confirmPassword')}
+            error={!!errors?.confirmPassword}
+            helperText={errors?.confirmPassword?.message}
+          />
+
           {!signUp && (
             <TextField
-              id="avatar-url"
-              value={avatarUrl}
+              id="avatarUrl"
+              type="url"
+              label="Avatar image (url)"
               variant="outlined"
               size="small"
               fullWidth
               sx={{
                 mb: 2,
               }}
-              onChange={(event) => {
-                setAvatarUrl(event.target.value);
-              }}
+              {...register('avatarUrl')}
+              error={!!errors?.avatarUrl}
+              helperText={errors?.avatarUrl?.message}
             />
           )}
           {signUp && (
@@ -122,11 +155,18 @@ const UserForm = (props) => {
             />
           )}
           {signUp && (
-            <FormControlLabel
-              control={<Checkbox checked={isChecked} onClick={() => setIsChecked(!isChecked)} />}
-              label="I agree to the processing of my personal
+            <>
+              <FormControlLabel
+                control={<Checkbox {...register('acceptPersonalInf')} />}
+                label="I agree to the processing of my personal
 information"
-            />
+              />
+              {!!errors?.acceptPersonalInf && (
+                <Typography variant="caption" display="block" gutterBottom sx={{ color: 'tomato' }}>
+                  {errors?.acceptPersonalInf?.message}
+                </Typography>
+              )}
+            </>
           )}
 
           <Button

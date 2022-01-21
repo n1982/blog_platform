@@ -1,25 +1,30 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { useForm } from 'react-hook-form';
 import { Box, Button, Paper, TextField, Typography } from '@mui/material';
 import { fetchLoginUser } from '../store/userSlice';
 
 const SignIn = () => {
   const dispatch = useDispatch();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    reset,
+  } = useForm({
+    mode: 'onBlur',
+  });
 
   const navigate = useNavigate();
   const location = useLocation();
   const fromPage = location.state?.from?.pathname || '/';
 
-  const handleClickSubmitButton = (event) => {
-    event.preventDefault();
-    dispatch(fetchLoginUser({ email, password }));
-    setEmail('');
-    setPassword('');
+  const onSubmit = (data) => {
+    dispatch(fetchLoginUser({ email: data.email, password: data.password }));
     navigate(fromPage, { replace: true });
+    reset();
   };
 
   return (
@@ -30,7 +35,7 @@ const SignIn = () => {
         maxWidth: 384,
       }}
     >
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Paper sx={{ p: 5 }}>
           <Typography
             variant="h6"
@@ -44,36 +49,47 @@ const SignIn = () => {
           </Typography>
 
           <Typography>Email address</Typography>
+
           <TextField
+            {...register('email', {
+              required: 'Поле email обязательно к заполнению',
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: 'Не корректный email',
+              },
+            })}
             id="email"
-            value={email}
-            label="Email address"
             variant="outlined"
             size="small"
             fullWidth
             sx={{
               mb: 1,
             }}
-            onChange={(event) => {
-              setEmail(event.target.value);
-            }}
           />
+          {errors?.email && <Typography>{errors?.email?.message}</Typography>}
           <Typography>Password</Typography>
           <TextField
+            {...register('password', {
+              required: 'Поле password обязательно к заполнению',
+              minLength: {
+                value: 6,
+                message: 'Пароль не может содержать менее 6 символов',
+              },
+              maxLength: {
+                value: 40,
+                message: 'Пароль не может содержать более 40 символов',
+              },
+            })}
             type="password"
             id="password"
-            label="Password"
-            value={password}
             variant="outlined"
             size="small"
             fullWidth
             sx={{
               mb: 3,
             }}
-            onChange={(event) => {
-              setPassword(event.target.value);
-            }}
           />
+          {errors?.password && <Typography>{errors?.password?.message}</Typography>}
 
           <Button
             type="submit"
@@ -81,9 +97,6 @@ const SignIn = () => {
             fullWidth
             sx={{
               mb: 2,
-            }}
-            onClick={(event) => {
-              handleClickSubmitButton(event);
             }}
           >
             Login

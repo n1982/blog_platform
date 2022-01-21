@@ -8,6 +8,9 @@ export const fetchLoginUser = createAsyncThunk(
   'user/fetchLoginUser',
   // eslint-disable-next-line no-unused-vars
   async ({ email, password }, { _, rejectWithValue }) => {
+    console.log('User login...');
+    console.log('Data', email, password);
+
     return axios
       .post(
         `https://kata.academy:8021/api/users/login`,
@@ -23,7 +26,8 @@ export const fetchLoginUser = createAsyncThunk(
       )
       .then((res) => res.data)
       .catch((err) => {
-        rejectWithValue(err);
+        console.log('error login user', err.response.data);
+        return rejectWithValue(err.response.data);
       });
   }
 );
@@ -31,8 +35,7 @@ export const fetchLoginUser = createAsyncThunk(
 export const fetchCreateUser = createAsyncThunk(
   'user/fetchCreateUser',
   // eslint-disable-next-line no-unused-vars
-  async ({ username, email, password }, { _, rejectWithValue }) => {
-    console.log('Incoming data', username, email, password);
+  async ({ userName: username, email, password }, { _, rejectWithValue }) => {
     return axios
       .post(
         `https://kata.academy:8021/api/users`,
@@ -49,7 +52,8 @@ export const fetchCreateUser = createAsyncThunk(
       )
       .then((res) => res.data)
       .catch((err) => {
-        rejectWithValue(err);
+        console.log('error login user', err.response.data);
+        return rejectWithValue(err.response.data);
       });
   }
 );
@@ -79,7 +83,7 @@ export const fetchUpdateUserProfile = createAsyncThunk(
       )
       .then((res) => res.data)
       .catch((err) => {
-        rejectWithValue(err);
+        return rejectWithValue(err);
       });
   }
 );
@@ -117,16 +121,16 @@ const userSlice = createSlice({
       console.log('user updated, successful');
     },
 
-    [fetchLoginUser.rejected]: () => {
-      console.log('User not logged in, error!!!');
+    [fetchLoginUser.rejected]: (_, action) => {
+      console.log('User not logged in, error!!!', action.payload.errors);
     },
 
-    [fetchCreateUser.rejected]: () => {
-      console.log('User not created, error!!!');
+    [fetchCreateUser.rejected]: (_, action) => {
+      console.log('User not created, error!!!', action.payload.errors);
     },
 
-    [fetchUpdateUserProfile.rejected]: () => {
-      console.log('User not updated, error!!!');
+    [fetchUpdateUserProfile.rejected]: (_, action) => {
+      console.log('User not updated, error!!!', action.payload.errors);
     },
   },
 });
