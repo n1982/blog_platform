@@ -8,9 +8,6 @@ export const fetchLoginUser = createAsyncThunk(
   'user/fetchLoginUser',
   // eslint-disable-next-line no-unused-vars
   async ({ email, password }, { _, rejectWithValue }) => {
-    console.log('User login...');
-    console.log('Data', email, password);
-
     return axios
       .post(
         `https://kata.academy:8021/api/users/login`,
@@ -61,7 +58,7 @@ export const fetchCreateUser = createAsyncThunk(
 export const fetchUpdateUserProfile = createAsyncThunk(
   'user/fetchUpdateUserProfile',
   // eslint-disable-next-line no-unused-vars
-  async ({ username, email, password, image }, { _, rejectWithValue }) => {
+  async ({ userName: username, email, password, avatarUrl: image }, { _, rejectWithValue }) => {
     console.log('Incoming data', username, email, password, image);
     return axios
       .put(
@@ -113,12 +110,12 @@ const userSlice = createSlice({
       state.image = action.payload.user.image;
       document.cookie = `token = ${action.payload.user.token}`;
     },
-    [fetchCreateUser.fulfilled]: () => {
-      console.log('user created, successful');
+    [fetchCreateUser.fulfilled]: (_, action) => {
+      console.log('user created, successful', action.payload);
     },
 
-    [fetchUpdateUserProfile.fulfilled]: () => {
-      console.log('user updated, successful');
+    [fetchUpdateUserProfile.fulfilled]: (_, action) => {
+      console.log('user updated, successful', action.payload);
     },
 
     [fetchLoginUser.rejected]: (_, action) => {

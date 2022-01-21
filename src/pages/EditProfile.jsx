@@ -11,7 +11,7 @@ const EditProfile = () => {
   const user = useSelector((state) => state.user);
 
   const handlerFormSubmit = (data) => {
-    // dispatch(fetchUpdateUserProfile({ username: userName, email, password, image: avatarUrl }));
+    dispatch(fetchUpdateUserProfile(data));
     console.log('edit form data', data);
   };
 

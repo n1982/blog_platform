@@ -7,16 +7,10 @@ import { fetchCreateUser } from '../store/userSlice';
 
 const SignUp = () => {
   const dispatch = useDispatch();
-  console.log('SignUp');
   const handlerFormSubmit = (data) => {
     dispatch(fetchCreateUser(data));
-    console.log('form signUP submit', data);
   };
-  // const handlerFormSubmit = (event, userName, userEmail, _, password) => {
-  //   event.preventDefault();
-  //   dispatch(fetchCreateUser({ username: userName, email: userEmail, password }));
-  //   console.log('form submit');
-  // };
+
   return <UserForm signUp handlerFormSubmit={handlerFormSubmit} />;
 };
 
