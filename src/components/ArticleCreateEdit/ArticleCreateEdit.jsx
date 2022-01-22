@@ -1,3 +1,4 @@
+/*
 // eslint-disable-next-line no-unused-vars
 import React from 'react';
 import { useDispatch } from 'react-redux';
@@ -17,3 +18,4 @@ const ArticleCreateEdit = () => {
 };
 
 export default ArticleCreateEdit;
+*/

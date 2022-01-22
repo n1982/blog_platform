@@ -27,7 +27,6 @@ const UserForm = ({ signUp, user, handlerFormSubmit }) => {
   });
 
   const {
-    // eslint-disable-next-line no-unused-vars
     register,
     formState: { errors },
     handleSubmit,
