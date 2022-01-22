@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
 import { Box, Paper, Typography } from '@mui/material';
 import ArticlePreview from '../ArticlePreview';
 
@@ -11,7 +12,9 @@ const Article = (props) => {
 
       <Box>
         {/* todo подключить обработку маркдаун разметки */}
-        <Typography>{article.body}</Typography>
+        <Typography>
+          <ReactMarkdown>{article.body}</ReactMarkdown>
+        </Typography>
       </Box>
     </Paper>
   );
