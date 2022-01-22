@@ -10,6 +10,7 @@ import { Favorite, FavoriteBorder } from '@mui/icons-material';
 import { fetchDeleteArticle } from '../../store/articleSlice';
 
 import formatDate from '../../utilites/formatDate';
+import uniqKey from '../../utilites/uniqKey';
 import avatarPicture from '../../assets/img/Avatar.png';
 
 const ArticlePreview = (props) => {
@@ -37,7 +38,7 @@ const ArticlePreview = (props) => {
           <Typography sx={{ mr: '5px' }}>{article.favoritesCount}</Typography>
         </Grid>
         {article.tagList.map(
-          (tag) => tag && <Chip key={article.slug + tag} label={tag} variant="outlined" size="small" sx={{ mr: 1 }} />
+          (tag) => tag && <Chip key={uniqKey()} label={tag} variant="outlined" size="small" sx={{ mr: 1 }} />
         )}
         {/* todo добавить overflow-hiden */}
         <Typography align="justify" sx={{ mt: 1 }}>

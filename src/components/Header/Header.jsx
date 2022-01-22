@@ -47,7 +47,7 @@ const Header = () => {
           {auth && <Avatar alt="Avatar" src={userAvatar} sx={{ width: 46, height: 46 }} />}
         </Link>
         {!auth && (
-          <Link to="/sign-in" style={{ textDecoration: 'none' }}>
+          <Link to="/sign-in" style={{ textDecoration: 'none' }} state={{ from: location }}>
             {/* Пользователь не  залогинен */}
             <Button sx={{ textTransform: 'none', mr: 3, color: 'black' }}>Sign In</Button>
           </Link>

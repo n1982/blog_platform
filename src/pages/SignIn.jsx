@@ -1,25 +1,42 @@
-import React, { useState } from 'react';
+import React from 'react';
+import * as Yup from 'yup';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+
 import { Box, Button, Paper, TextField, Typography } from '@mui/material';
+
 import { fetchLoginUser } from '../store/userSlice';
 
 const SignIn = () => {
   const dispatch = useDispatch();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  //  Правила валидации
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().required('Поле "Email" должно быть заполнено').email('Email не верный'),
+    password: Yup.string()
+      .min(6, 'Поле "Password" не должно содержать менее 6 символов')
+      .required('Поле "Password" должно быть заполнено'),
+  });
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    reset,
+  } = useForm({
+    mode: 'onBlur',
+    resolver: yupResolver(validationSchema),
+  });
 
   const navigate = useNavigate();
   const location = useLocation();
   const fromPage = location.state?.from?.pathname || '/';
 
-  const handleClickSubmitButton = (event) => {
-    event.preventDefault();
-    dispatch(fetchLoginUser({ email, password }));
-    setEmail('');
-    setPassword('');
+  const onSubmit = (data) => {
+    dispatch(fetchLoginUser({ email: data.email, password: data.password }));
     navigate(fromPage, { replace: true });
+    reset();
   };
 
   return (
@@ -30,7 +47,7 @@ const SignIn = () => {
         maxWidth: 384,
       }}
     >
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Paper sx={{ p: 5 }}>
           <Typography
             variant="h6"
@@ -44,35 +61,33 @@ const SignIn = () => {
           </Typography>
 
           <Typography>Email address</Typography>
+
           <TextField
             id="email"
-            value={email}
-            label="Email address"
             variant="outlined"
             size="small"
             fullWidth
             sx={{
               mb: 1,
             }}
-            onChange={(event) => {
-              setEmail(event.target.value);
-            }}
+            {...register('email')}
+            error={!!errors?.email}
+            helperText={errors?.email?.message}
           />
+
           <Typography>Password</Typography>
           <TextField
             type="password"
             id="password"
-            label="Password"
-            value={password}
             variant="outlined"
             size="small"
             fullWidth
             sx={{
               mb: 3,
             }}
-            onChange={(event) => {
-              setPassword(event.target.value);
-            }}
+            {...register('password')}
+            error={!!errors?.password}
+            helperText={errors?.password?.message}
           />
 
           <Button
@@ -81,9 +96,6 @@ const SignIn = () => {
             fullWidth
             sx={{
               mb: 2,
-            }}
-            onClick={(event) => {
-              handleClickSubmitButton(event);
             }}
           >
             Login
