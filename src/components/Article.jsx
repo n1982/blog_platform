@@ -2,7 +2,7 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Box, Paper, Typography } from '@mui/material';
-import ArticlePreview from '../ArticlePreview';
+import ArticlePreview from './ArticlePreview';
 
 const Article = (props) => {
   const { article } = props;
@@ -11,7 +11,6 @@ const Article = (props) => {
       <ArticlePreview article={article} singlePage />
 
       <Box>
-        {/* todo подключить обработку маркдаун разметки */}
         <Typography>
           <ReactMarkdown>{article.body}</ReactMarkdown>
         </Typography>

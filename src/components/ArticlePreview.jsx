@@ -7,11 +7,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Avatar, Box, Button, Checkbox, Chip, Grid, Typography } from '@mui/material';
 import { Favorite, FavoriteBorder } from '@mui/icons-material';
 
-import { fetchDeleteArticle } from '../../store/articleSlice';
+import { fetchDeleteArticle } from '../store/articleSlice';
 
-import formatDate from '../../utilites/formatDate';
-import uniqKey from '../../utilites/uniqKey';
-import avatarPicture from '../../assets/img/Avatar.png';
+import formatDate from '../utilites/formatDate';
+import uniqKey from '../utilites/uniqKey';
+import avatarPicture from '../assets/img/Avatar.png';
 
 const ArticlePreview = (props) => {
   const dispatch = useDispatch();
