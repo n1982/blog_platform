@@ -1,10 +1,11 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Pagination, Paper, Stack } from '@mui/material';
 import { fetchGetArticles } from '../store/articleSlice';
-import paginationCount from '../utilites/paginationCount';
 import ArticlePreview from '../components/ArticlePreview';
+import Spinner from '../components/Spinner';
 
 const ArticleList = () => {
   const dispatch = useDispatch();
@@ -16,25 +17,32 @@ const ArticleList = () => {
 
   const articles = useSelector((state) => state.articles.articles);
   const articlesCount = useSelector((state) => state.articles.articlesCount);
-
+  const requestStatus = useSelector((state) => state.articles.requestStatus);
+  console.log('requestStatus', requestStatus === 'fulfilled');
   return (
     <>
-      <Stack spacing={2}>
-        {articles.map((article) => (
-          <Paper key={article.slug} sx={{ p: 1 }}>
-            <ArticlePreview article={article} />
-          </Paper>
-        ))}
-      </Stack>
-      <Stack alignItems="center" sx={{ mt: 2 }}>
-        <Pagination
-          count={paginationCount(articlesCount)}
-          shape="rounded"
-          onChange={(_, num) => {
-            setOffset((num - 1) * 5);
-          }}
-        />
-      </Stack>
+      {requestStatus === 'pending' && <Spinner />}
+      {requestStatus === 'fulfilled' && (
+        <Stack spacing={2}>
+          {articles.map((article) => (
+            <Paper key={article.slug} sx={{ p: 1 }}>
+              <ArticlePreview article={article} />
+            </Paper>
+          ))}
+        </Stack>
+      )}
+      {requestStatus === 'fulfilled' && (
+        <Stack alignItems="center" sx={{ mt: 2 }}>
+          <Pagination
+            count={Math.ceil(articlesCount / 5)}
+            page={offset / 5 + 1}
+            shape="rounded"
+            onChange={(_, num) => {
+              setOffset((num - 1) * 5);
+            }}
+          />
+        </Stack>
+      )}
     </>
   );
 };
