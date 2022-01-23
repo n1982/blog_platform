@@ -1,10 +1,10 @@
-/* eslint-disable no-param-reassign,arrow-body-style */
+/* eslint-disable no-param-reassign,arrow-body-style,no-unused-vars */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import getCookie from '../utilites/getCookie';
 
 export const fetchGetArticles = createAsyncThunk(
-  'articles/fetchArticles',
+  'articles/fetchGetArticles',
   async ({ limit, offset }, { rejectWithValue }) =>
     axios
       .get(`https://kata.academy:8021/api/articles`, {
@@ -14,13 +14,18 @@ export const fetchGetArticles = createAsyncThunk(
         },
       })
       .then((res) => res.data)
-      .catch((err) => rejectWithValue(err.message))
+      .catch((err) => {
+        return rejectWithValue(err.message);
+      })
 );
 export const fetchSingleArticle = createAsyncThunk('articles/fetchSingleArticle', async (slug, { rejectWithValue }) =>
   axios
     .get(`https://kata.academy:8021/api/articles/${slug}`)
     .then((res) => res.data)
-    .catch((err) => rejectWithValue(err.message))
+    .catch((err) => {
+      console.log('error loading single article (from fetch)', err?.response);
+      return rejectWithValue({ status: err.response.status, statusText: err.response.statusText });
+    })
 );
 
 export const fetchCreateArticle = createAsyncThunk(
@@ -45,7 +50,9 @@ export const fetchCreateArticle = createAsyncThunk(
         }
       )
       .then((res) => res.data)
-      .catch((err) => rejectWithValue(err.message));
+      .catch((err) => {
+        return rejectWithValue(err.message);
+      });
   }
 );
 
@@ -71,7 +78,9 @@ export const fetchEditArticle = createAsyncThunk(
         }
       )
       .then((res) => res.data)
-      .catch((err) => rejectWithValue(err.message));
+      .catch((err) => {
+        return rejectWithValue(err.message);
+      });
   }
 );
 
@@ -84,7 +93,9 @@ export const fetchDeleteArticle = createAsyncThunk('articles/fetchDeleteArticle'
       },
     })
     .then((res) => res.data)
-    .catch((err) => rejectWithValue(err.message))
+    .catch((err) => {
+      return rejectWithValue(err.message);
+    })
 );
 const articleSlice = createSlice({
   name: 'articles',
@@ -92,44 +103,73 @@ const articleSlice = createSlice({
     articles: [],
     singleArticle: null,
     articlesCount: null,
+    requestStatus: '',
   },
   reducers: {},
   extraReducers: {
+    // Запрос отправлен
+    [fetchGetArticles.pending]: (state, action) => {
+      state.requestStatus = 'pending';
+    },
+    [fetchSingleArticle.pending]: (state, action) => {
+      state.requestStatus = 'pending';
+    },
+    [fetchCreateArticle.pending]: (state, action) => {
+      state.requestStatus = 'pending';
+    },
+    [fetchEditArticle.pending]: (state, action) => {
+      state.requestStatus = 'pending';
+    },
+    [fetchDeleteArticle.pending]: (state, action) => {
+      state.requestStatus = 'pending';
+    },
+    // Успешный запрос
     [fetchGetArticles.fulfilled]: (state, action) => {
       state.articles = [...action.payload.articles];
       state.articlesCount = action.payload.articlesCount;
+      state.requestStatus = 'fulfilled';
     },
     [fetchSingleArticle.fulfilled]: (state, action) => {
       state.singleArticle = { ...action.payload.article };
+      state.requestStatus = 'fulfilled';
     },
 
-    [fetchCreateArticle.fulfilled]: () => {
+    [fetchCreateArticle.fulfilled]: (state) => {
       console.log('article created');
+      state.requestStatus = 'fulfilled';
     },
 
-    [fetchEditArticle.fulfilled]: () => {
+    [fetchEditArticle.fulfilled]: (state) => {
       console.log('article edit');
+      state.requestStatus = 'fulfilled';
     },
 
-    [fetchDeleteArticle.fulfilled]: () => {
+    [fetchDeleteArticle.fulfilled]: (state) => {
       console.log('delete article successful');
+      state.requestStatus = 'fulfilled';
+    },
+    // Ошибка в запросе
+    [fetchGetArticles.rejected]: (state, action) => {
+      console.log('Articles list loading error!!!', action.payload.status);
+      state.requestStatus = 'rejected';
+    },
+    [fetchSingleArticle.rejected]: (state, action) => {
+      console.log('Single article loading error!!!', action.payload.status);
+      console.log('Single article loading error!!!', action.payload.statusText);
+      state.requestStatus = 'rejected';
+    },
+    [fetchCreateArticle.rejected]: (state, action) => {
+      console.log('Article not created, error!!!', action.payload.errors);
+      state.requestStatus = 'rejected';
+    },
+    [fetchEditArticle.rejected]: (state, action) => {
+      console.log('Article not created, error!!!', action.payload.errors);
+      state.requestStatus = 'rejected';
     },
 
-    [fetchGetArticles.rejected]: () => {
-      console.log('Articles list loading error!!!');
-    },
-    [fetchSingleArticle.rejected]: () => {
-      console.log('Single article loading error!!!');
-    },
-    [fetchCreateArticle.rejected]: () => {
-      console.log('Article not created, error!!!');
-    },
-    [fetchEditArticle.rejected]: () => {
-      console.log('Article not created, error!!!');
-    },
-
-    [fetchDeleteArticle.rejected]: () => {
-      console.log('Article not deleted, error!!!');
+    [fetchDeleteArticle.rejected]: (state, action) => {
+      console.log('Article not deleted, error!!!', action.payload.errors);
+      state.requestStatus = 'rejected';
     },
   },
 });

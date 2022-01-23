@@ -80,7 +80,8 @@ export const fetchUpdateUserProfile = createAsyncThunk(
       )
       .then((res) => res.data)
       .catch((err) => {
-        return rejectWithValue(err);
+        console.log('error login user', err.response.data);
+        return rejectWithValue(err.response.data);
       });
   }
 );
@@ -111,11 +112,11 @@ const userSlice = createSlice({
       document.cookie = `token = ${action.payload.user.token}`;
     },
     [fetchCreateUser.fulfilled]: (_, action) => {
-      console.log('user created, successful', action.payload);
+      console.log('user created, successful', action.payload.errors);
     },
 
     [fetchUpdateUserProfile.fulfilled]: (_, action) => {
-      console.log('user updated, successful', action.payload);
+      console.log('user updated, successful', action.payload.errors);
     },
 
     [fetchLoginUser.rejected]: (_, action) => {

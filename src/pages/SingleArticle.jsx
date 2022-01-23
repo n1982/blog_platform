@@ -7,11 +7,13 @@ import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowBackIos';
 import ReactMarkdown from 'react-markdown';
 import { fetchSingleArticle } from '../store/articleSlice';
 import ArticlePreview from '../components/ArticlePreview';
+import Spinner from '../components/Spinner';
 
 const SingleArticle = () => {
   const dispatch = useDispatch();
   const { slug } = useParams();
   const navigate = useNavigate();
+  const requestStatus = useSelector((state) => state.articles.requestStatus);
 
   const goBack = () => navigate(-1);
 
@@ -20,10 +22,11 @@ const SingleArticle = () => {
   }, [dispatch, slug]);
 
   const article = useSelector((state) => state.articles.singleArticle);
-  console.log(article);
+
   return (
     <>
-      {article && (
+      {requestStatus === 'pending' && <Spinner />}
+      {requestStatus === 'fulfilled' && article && (
         <>
           <Chip icon={<ArrowCircleLeftOutlinedIcon />} label="Go back" variant="outlined" onClick={goBack} />
           <Paper sx={{ p: '15px' }}>
