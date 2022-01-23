@@ -3,14 +3,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { fetchEditArticle, fetchSingleArticle } from '../store/articleSlice';
 import ArticleForm from '../components/ArticleForm';
+import ModalWindow from '../components/ModalWindow';
 
 const EditArticle = () => {
   const dispatch = useDispatch();
   const { slug } = useParams();
+  const article = useSelector((state) => state.articles.singleArticle);
+
   const navigate = useNavigate();
   const location = useLocation();
   const fromPage = location.state?.from?.pathname || '/';
-  const article = useSelector((state) => state.articles.singleArticle);
 
   useEffect(() => {
     dispatch(fetchSingleArticle(slug));
@@ -21,7 +23,12 @@ const EditArticle = () => {
     navigate(fromPage, { replace: true });
   };
 
-  return <ArticleForm article={article} handlerFormSubmit={handlerFormSubmit} />;
+  return (
+    <>
+      <ArticleForm article={article} handlerFormSubmit={handlerFormSubmit} />
+      <ModalWindow />
+    </>
+  );
 };
 
 export default EditArticle;
