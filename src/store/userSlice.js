@@ -23,8 +23,8 @@ export const fetchLoginUser = createAsyncThunk(
       )
       .then((res) => res.data)
       .catch((err) => {
-        console.log('error login user', err.response.data);
-        return rejectWithValue(err.response.data);
+        console.log('error login user', err.response);
+        return rejectWithValue({ status: err.response.status, statusText: 'Логин или пароль не верные' });
       });
   }
 );
@@ -93,6 +93,8 @@ const userSlice = createSlice({
     email: '',
     bio: '',
     image: '',
+    userRequestStatus: null,
+    errorUserServer: null,
   },
   reducers: {
     logOut(state) {
@@ -101,34 +103,54 @@ const userSlice = createSlice({
       state.email = '';
       state.bio = '';
       state.image = '';
+      state.userRequestStatus = '';
     },
   },
   extraReducers: {
+    [fetchLoginUser.pending]: (state) => {
+      state.userRequestStatus = 'pending';
+      state.errorUserServer = null;
+    },
+    [fetchCreateUser.pending]: (state) => {
+      state.userRequestStatus = 'pending';
+      state.errorUserServer = null;
+    },
+    [fetchUpdateUserProfile.pending]: (state) => {
+      state.userRequestStatus = 'pending';
+      state.errorUserServer = null;
+    },
+
     [fetchLoginUser.fulfilled]: (state, action) => {
       state.username = action.payload.user.username;
       state.email = action.payload.user.email;
       state.bio = action.payload.user.bio;
       state.image = action.payload.user.image;
       document.cookie = `token = ${action.payload.user.token}`;
+
+      state.userRequestStatus = 'fulfilled';
     },
-    [fetchCreateUser.fulfilled]: (_, action) => {
-      console.log('user created, successful', action.payload.errors);
+    [fetchCreateUser.fulfilled]: (state) => {
+      state.userRequestStatus = 'fulfilled';
+    },
+    [fetchUpdateUserProfile.fulfilled]: (state) => {
+      state.userRequestStatus = 'fulfilled';
     },
 
-    [fetchUpdateUserProfile.fulfilled]: (_, action) => {
-      console.log('user updated, successful', action.payload.errors);
+    [fetchLoginUser.rejected]: (state, action) => {
+      console.log('User not logged in, error!!!', action.payload);
+      state.errorUserServer = action.payload;
+      state.userRequestStatus = 'rejected';
     },
 
-    [fetchLoginUser.rejected]: (_, action) => {
-      console.log('User not logged in, error!!!', action.payload.errors);
+    [fetchCreateUser.rejected]: (state, action) => {
+      console.log('User not created, error!!!', action.payload);
+      state.errorUserServer = action.payload;
+      state.userRequestStatus = 'rejected';
     },
 
-    [fetchCreateUser.rejected]: (_, action) => {
-      console.log('User not created, error!!!', action.payload.errors);
-    },
-
-    [fetchUpdateUserProfile.rejected]: (_, action) => {
+    [fetchUpdateUserProfile.rejected]: (state, action) => {
       console.log('User not updated, error!!!', action.payload.errors);
+      state.userRequestStatus = 'rejected';
     },
   },
 });

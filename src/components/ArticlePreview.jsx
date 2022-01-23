@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types,no-unused-vars */
 import React, { useState } from 'react';
 
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Avatar, Box, Button, Checkbox, Chip, Grid, Typography } from '@mui/material';
@@ -36,7 +36,6 @@ const ArticlePreview = (props) => {
       <Grid container columnSpacing={2}>
         <Grid item xs={10}>
           <Grid container direction="row" justifyContent="flex-start" alignItems="center" sx={{ mb: 1 }}>
-            {/* сделать подстановку /articles адреса с помощью useLocation */}
             <Link to={`${article.slug}`}>
               <Typography variant="h5" color="#1890FF" sx={{ mr: '5px' }}>
                 {article.title}

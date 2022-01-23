@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import ArticleList from '../pages/ArticleList';
 import SignIn from '../pages/SignIn';
 import SignUp from '../pages/SignUp';
@@ -17,7 +17,7 @@ const App = () => {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        <Route index element={<ArticleList />} />
+        <Route index element={<Navigate to="articles" replace />} />
         <Route path="articles" element={<ArticleList />} />
         <Route path="articles/:slug" element={<SingleArticle />} />
         <Route path="sign-in" element={<SignIn />} />
