@@ -1,10 +1,12 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Chip } from '@mui/material';
-import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowCircleLeftOutlined';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Box, Chip, Paper, Typography } from '@mui/material';
+import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowBackIos';
+import ReactMarkdown from 'react-markdown';
 import { fetchSingleArticle } from '../store/articleSlice';
-import Article from '../components/Article';
+import ArticlePreview from '../components/ArticlePreview';
 
 const SingleArticle = () => {
   const dispatch = useDispatch();
@@ -18,10 +20,24 @@ const SingleArticle = () => {
   }, [dispatch, slug]);
 
   const article = useSelector((state) => state.articles.singleArticle);
+  console.log(article);
   return (
     <>
-      {article && <Article article={article} />}
-      <Chip icon={<ArrowCircleLeftOutlinedIcon />} label="Go back" variant="outlined" onClick={goBack} />
+      {article && (
+        <>
+          <Chip icon={<ArrowCircleLeftOutlinedIcon />} label="Go back" variant="outlined" onClick={goBack} />
+          <Paper sx={{ p: '15px' }}>
+            <ArticlePreview article={article} singlePage />
+            <Box>
+              <Typography>
+                <ReactMarkdown>{article.body}</ReactMarkdown>
+              </Typography>
+            </Box>
+          </Paper>
+        </>
+      )}
+      {/* {article && <Article article={article} />} */}
+      {/* <Chip icon={<ArrowCircleLeftOutlinedIcon />} label="Go back" variant="outlined" onClick={goBack} /> */}
     </>
   );
 };
