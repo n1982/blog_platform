@@ -42,7 +42,6 @@ const UserForm = ({ signUp, user, handlerFormSubmit }) => {
 
   const onSubmit = (data) => {
     handlerFormSubmit({ ...data });
-    // navigate(fromPage, { replace: true });
   };
   return (
     <Box

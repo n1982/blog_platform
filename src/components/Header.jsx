@@ -4,8 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppBar, Avatar, Button, Toolbar, Typography } from '@mui/material';
 
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import avatarPicture from '../../assets/img/Avatar.png';
-import { logOut } from '../../store/userSlice';
+import avatarPicture from '../assets/img/Avatar.png';
+import { logOut } from '../store/userSlice';
 
 const Header = () => {
   const dispatch = useDispatch();

@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { Box, Button, Divider, Paper, TextField, Typography } from '@mui/material';
-import uniqKey from '../../utilites/uniqKey';
+import uniqKey from '../utilites/uniqKey';
 
 // eslint-disable-next-line no-unused-vars
 const ArticleForm = ({ article, handlerFormSubmit }) => {

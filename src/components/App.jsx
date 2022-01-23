@@ -1,15 +1,15 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import ArticleList from '../../pages/ArticleList';
-import SignIn from '../../pages/SignIn';
-import SignUp from '../../pages/SignUp';
-import EditProfile from '../../pages/EditProfile';
-import CreateArticle from '../../pages/CreateArticle';
-import NotFound from '../../pages/NotFound';
-import Layout from '../Layout';
-import SingleArticle from '../../pages/SingleArticle';
-import EditArticle from '../../pages/EditArticle';
-import RequireAuth from '../hoc/RequireAuth';
+import ArticleList from '../pages/ArticleList';
+import SignIn from '../pages/SignIn';
+import SignUp from '../pages/SignUp';
+import EditProfile from '../pages/EditProfile';
+import CreateArticle from '../pages/CreateArticle';
+import NotFound from '../pages/NotFound';
+import Layout from './Layout';
+import SingleArticle from '../pages/SingleArticle';
+import EditArticle from '../pages/EditArticle';
+import RequireAuth from './hoc/RequireAuth';
 
 const App = () => {
   console.log('App');
