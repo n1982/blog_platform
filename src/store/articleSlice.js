@@ -15,7 +15,7 @@ export const fetchGetArticles = createAsyncThunk(
       })
       .then((res) => res.data)
       .catch((err) => {
-        return rejectWithValue(err.message);
+        return rejectWithValue({ status: err.response.status, statusText: err.response.statusText });
       })
 );
 export const fetchSingleArticle = createAsyncThunk('articles/fetchSingleArticle', async (slug, { rejectWithValue }) =>
@@ -23,7 +23,6 @@ export const fetchSingleArticle = createAsyncThunk('articles/fetchSingleArticle'
     .get(`https://kata.academy:8021/api/articles/${slug}`)
     .then((res) => res.data)
     .catch((err) => {
-      console.log('error loading single article (from fetch)', err?.response);
       return rejectWithValue({ status: err.response.status, statusText: err.response.statusText });
     })
 );
@@ -51,7 +50,7 @@ export const fetchCreateArticle = createAsyncThunk(
       )
       .then((res) => res.data)
       .catch((err) => {
-        return rejectWithValue(err.message);
+        return rejectWithValue({ status: err.response.status, statusText: err.response.statusText });
       });
   }
 );
@@ -94,82 +93,96 @@ export const fetchDeleteArticle = createAsyncThunk('articles/fetchDeleteArticle'
     })
     .then((res) => res.data)
     .catch((err) => {
-      return rejectWithValue(err.message);
+      return rejectWithValue({ status: err.response.status, statusText: err.response.statusText });
     })
 );
+
 const articleSlice = createSlice({
   name: 'articles',
   initialState: {
     articles: [],
     singleArticle: null,
     articlesCount: null,
-    requestStatus: '',
+    articleRequestStatus: '',
+    errorArticleServer: null,
+    articleIsCreated: false,
   },
   reducers: {},
   extraReducers: {
     // Запрос отправлен
     [fetchGetArticles.pending]: (state, action) => {
-      state.requestStatus = 'pending';
+      console.log();
+      state.articleRequestStatus = 'pending';
+      state.errorArticleServer = null;
+      state.articleIsCreated = false;
     },
     [fetchSingleArticle.pending]: (state, action) => {
-      state.requestStatus = 'pending';
+      state.articleRequestStatus = 'pending';
+      state.errorArticleServer = null;
+      state.articleIsCreated = false;
     },
     [fetchCreateArticle.pending]: (state, action) => {
-      state.requestStatus = 'pending';
+      state.articleRequestStatus = 'pending';
+      state.errorArticleServer = null;
+      state.articleIsCreated = false;
     },
     [fetchEditArticle.pending]: (state, action) => {
-      state.requestStatus = 'pending';
+      state.articleRequestStatus = 'pending';
+      state.errorArticleServer = null;
+      state.articleIsCreated = false;
     },
     [fetchDeleteArticle.pending]: (state, action) => {
-      state.requestStatus = 'pending';
+      state.articleRequestStatus = 'pending';
+      state.errorArticleServer = null;
     },
     // Успешный запрос
     [fetchGetArticles.fulfilled]: (state, action) => {
       state.articles = [...action.payload.articles];
       state.articlesCount = action.payload.articlesCount;
-      state.requestStatus = 'fulfilled';
+      state.articleRequestStatus = 'fulfilled';
     },
     [fetchSingleArticle.fulfilled]: (state, action) => {
       state.singleArticle = { ...action.payload.article };
-      state.requestStatus = 'fulfilled';
+      state.articleRequestStatus = 'fulfilled';
     },
 
     [fetchCreateArticle.fulfilled]: (state) => {
       console.log('article created');
-      state.requestStatus = 'fulfilled';
+      state.articleRequestStatus = 'fulfilled';
+      state.articleIsCreated = true;
     },
 
     [fetchEditArticle.fulfilled]: (state) => {
       console.log('article edit');
-      state.requestStatus = 'fulfilled';
+      state.articleRequestStatus = 'fulfilled';
+      state.articleIsCreated = true;
     },
 
     [fetchDeleteArticle.fulfilled]: (state) => {
       console.log('delete article successful');
-      state.requestStatus = 'fulfilled';
+      state.articleRequestStatus = 'fulfilled';
     },
     // Ошибка в запросе
     [fetchGetArticles.rejected]: (state, action) => {
-      console.log('Articles list loading error!!!', action.payload.status);
-      state.requestStatus = 'rejected';
+      state.errorArticleServer = action.payload;
+      state.articleRequestStatus = 'rejected';
     },
     [fetchSingleArticle.rejected]: (state, action) => {
-      console.log('Single article loading error!!!', action.payload.status);
-      console.log('Single article loading error!!!', action.payload.statusText);
-      state.requestStatus = 'rejected';
+      state.errorArticleServer = action.payload;
+      state.articleRequestStatus = 'rejected';
     },
     [fetchCreateArticle.rejected]: (state, action) => {
-      console.log('Article not created, error!!!', action.payload.errors);
-      state.requestStatus = 'rejected';
+      state.errorArticleServer = action.payload;
+      state.articleRequestStatus = 'rejected';
     },
     [fetchEditArticle.rejected]: (state, action) => {
-      console.log('Article not created, error!!!', action.payload.errors);
-      state.requestStatus = 'rejected';
+      state.errorArticleServer = action.payload;
+      state.articleRequestStatus = 'rejected';
     },
 
     [fetchDeleteArticle.rejected]: (state, action) => {
-      console.log('Article not deleted, error!!!', action.payload.errors);
-      state.requestStatus = 'rejected';
+      state.errorArticleServer = action.payload;
+      state.articleRequestStatus = 'rejected';
     },
   },
 });

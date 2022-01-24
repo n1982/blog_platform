@@ -23,8 +23,11 @@ export const fetchLoginUser = createAsyncThunk(
       )
       .then((res) => res.data)
       .catch((err) => {
-        console.log('error login user', err.response.data);
-        return rejectWithValue(err.response.data);
+        console.log('err.response', err.response);
+        return rejectWithValue({
+          status: err.response.status,
+          statusText: err?.response?.data?.errors?.message || 'Логин или пароль не верные',
+        });
       });
   }
 );
@@ -49,8 +52,10 @@ export const fetchCreateUser = createAsyncThunk(
       )
       .then((res) => res.data)
       .catch((err) => {
-        console.log('error login user', err.response.data);
-        return rejectWithValue(err.response.data);
+        return rejectWithValue({
+          status: err.response.status,
+          statusText: err?.response?.data?.errors?.message || 'Не верные данные. Проверьте заполнение полей!',
+        });
       });
   }
 );
@@ -80,8 +85,11 @@ export const fetchUpdateUserProfile = createAsyncThunk(
       )
       .then((res) => res.data)
       .catch((err) => {
-        console.log('error login user', err.response.data);
-        return rejectWithValue(err.response.data);
+        return rejectWithValue({
+          status: err.response.status,
+          statusText:
+            err?.response?.data?.errors?.message || 'Данные не изменились. Такой пользователь уже существует!',
+        });
       });
   }
 );
@@ -93,6 +101,9 @@ const userSlice = createSlice({
     email: '',
     bio: '',
     image: '',
+    userRequestStatus: null,
+    errorUserServer: null,
+    userIsEdit: false,
   },
   reducers: {
     logOut(state) {
@@ -101,39 +112,72 @@ const userSlice = createSlice({
       state.email = '';
       state.bio = '';
       state.image = '';
+      state.userRequestStatus = '';
+    },
+    setUserIsNotEdit(state) {
+      state.userIsEdit = false;
+    },
+    resetUserError(state) {
+      state.errorUserServer = null;
     },
   },
   extraReducers: {
+    [fetchLoginUser.pending]: (state) => {
+      state.userRequestStatus = 'pending';
+      state.errorUserServer = null;
+      state.userIsEdit = false;
+    },
+    [fetchCreateUser.pending]: (state) => {
+      state.userRequestStatus = 'pending';
+      state.errorUserServer = null;
+      state.userIsEdit = false;
+    },
+    [fetchUpdateUserProfile.pending]: (state) => {
+      state.userRequestStatus = 'pending';
+      state.errorUserServer = null;
+      state.userIsEdit = false;
+    },
+
     [fetchLoginUser.fulfilled]: (state, action) => {
       state.username = action.payload.user.username;
       state.email = action.payload.user.email;
       state.bio = action.payload.user.bio;
       state.image = action.payload.user.image;
       document.cookie = `token = ${action.payload.user.token}`;
+
+      state.userRequestStatus = 'fulfilled';
     },
-    [fetchCreateUser.fulfilled]: (_, action) => {
-      console.log('user created, successful', action.payload.errors);
+    [fetchCreateUser.fulfilled]: (state) => {
+      state.userRequestStatus = 'fulfilled';
+    },
+    [fetchUpdateUserProfile.fulfilled]: (state) => {
+      state.userRequestStatus = 'fulfilled';
+      state.userIsEdit = true;
     },
 
-    [fetchUpdateUserProfile.fulfilled]: (_, action) => {
-      console.log('user updated, successful', action.payload.errors);
+    [fetchLoginUser.rejected]: (state, action) => {
+      console.log('User not logged in, error!!!', action.payload);
+      state.errorUserServer = action.payload;
+      state.userRequestStatus = 'rejected';
     },
 
-    [fetchLoginUser.rejected]: (_, action) => {
-      console.log('User not logged in, error!!!', action.payload.errors);
+    [fetchCreateUser.rejected]: (state, action) => {
+      console.log('User not created, error!!!', action.payload);
+      state.errorUserServer = action.payload;
+      state.userRequestStatus = 'rejected';
+      state.userIsEdit = false;
     },
 
-    [fetchCreateUser.rejected]: (_, action) => {
-      console.log('User not created, error!!!', action.payload.errors);
-    },
-
-    [fetchUpdateUserProfile.rejected]: (_, action) => {
-      console.log('User not updated, error!!!', action.payload.errors);
+    [fetchUpdateUserProfile.rejected]: (state, action) => {
+      console.log('User not updated, error!!!', action.payload);
+      state.errorUserServer = action.payload;
+      state.userRequestStatus = 'rejected';
+      state.userIsEdit = false;
     },
   },
 });
 
 // eslint-disable-next-line no-empty-pattern
-export const { logOut } = userSlice.actions;
+export const { logOut, setUserIsNotEdit, resetUserError } = userSlice.actions;
 
 export default userSlice.reducer;
