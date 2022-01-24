@@ -52,7 +52,10 @@ export const fetchCreateUser = createAsyncThunk(
       )
       .then((res) => res.data)
       .catch((err) => {
-        return rejectWithValue({ status: err.response.status, statusText: err.response.message });
+        return rejectWithValue({
+          status: err.response.status,
+          statusText: err?.response?.data?.errors?.message || 'Не верные данные. Проверьте заполнение полей!',
+        });
       });
   }
 );
@@ -82,7 +85,11 @@ export const fetchUpdateUserProfile = createAsyncThunk(
       )
       .then((res) => res.data)
       .catch((err) => {
-        return rejectWithValue({ status: err.response.status, statusText: err.response.message });
+        return rejectWithValue({
+          status: err.response.status,
+          statusText:
+            err?.response?.data?.errors?.message || 'Данные не изменились. Такой пользователь уже существует!',
+        });
       });
   }
 );
@@ -96,7 +103,7 @@ const userSlice = createSlice({
     image: '',
     userRequestStatus: null,
     errorUserServer: null,
-    userIsUpdate: false,
+    userIsEdit: false,
   },
   reducers: {
     logOut(state) {
@@ -107,8 +114,8 @@ const userSlice = createSlice({
       state.image = '';
       state.userRequestStatus = '';
     },
-    setUserIsNotUpdate(state) {
-      state.userIsUpdate = false;
+    setUserIsNotEdit(state) {
+      state.userIsEdit = false;
     },
     resetUserError(state) {
       state.errorUserServer = null;
@@ -118,17 +125,17 @@ const userSlice = createSlice({
     [fetchLoginUser.pending]: (state) => {
       state.userRequestStatus = 'pending';
       state.errorUserServer = null;
-      state.userIsUpdate = false;
+      state.userIsEdit = false;
     },
     [fetchCreateUser.pending]: (state) => {
       state.userRequestStatus = 'pending';
       state.errorUserServer = null;
-      state.userIsUpdate = false;
+      state.userIsEdit = false;
     },
     [fetchUpdateUserProfile.pending]: (state) => {
       state.userRequestStatus = 'pending';
       state.errorUserServer = null;
-      state.userIsUpdate = false;
+      state.userIsEdit = false;
     },
 
     [fetchLoginUser.fulfilled]: (state, action) => {
@@ -145,7 +152,7 @@ const userSlice = createSlice({
     },
     [fetchUpdateUserProfile.fulfilled]: (state) => {
       state.userRequestStatus = 'fulfilled';
-      state.userIsUpdate = true;
+      state.userIsEdit = true;
     },
 
     [fetchLoginUser.rejected]: (state, action) => {
@@ -164,12 +171,12 @@ const userSlice = createSlice({
       console.log('User not updated, error!!!', action.payload);
       state.errorUserServer = action.payload;
       state.userRequestStatus = 'rejected';
-      state.userIsUpdate = false;
+      state.userIsEdit = false;
     },
   },
 });
 
 // eslint-disable-next-line no-empty-pattern
-export const { logOut, setUserIsNotUpdate, resetUserError } = userSlice.actions;
+export const { logOut, setUserIsNotEdit, resetUserError } = userSlice.actions;
 
 export default userSlice.reducer;

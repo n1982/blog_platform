@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { fetchUpdateUserProfile, setUserIsNotUpdate } from '../store/userSlice';
+import { fetchUpdateUserProfile, setUserIsNotEdit } from '../store/userSlice';
 
 // eslint-disable-next-line no-unused-vars
 import UserForm from '../components/UserForm';
@@ -17,14 +17,14 @@ const EditProfile = () => {
   const fromPage = location.state?.from?.pathname || '/';
   const userRequestStatus = useSelector((state) => state.user.userRequestStatus);
   const errorUserServer = useSelector((state) => state.user.errorUserServer);
-  const userIsUpdate = useSelector((state) => state.user.userIsUpdate);
+  const userIsEdit = useSelector((state) => state.user.userIsEdit);
 
   useEffect(() => {
-    if (userRequestStatus === 'fulfilled' && userIsUpdate) {
-      dispatch(setUserIsNotUpdate());
+    if (userRequestStatus === 'fulfilled' && userIsEdit) {
+      dispatch(setUserIsNotEdit());
       navigate(fromPage, { replace: true });
     }
-  }, [navigate, fromPage, userRequestStatus, userIsUpdate, dispatch]);
+  }, [navigate, fromPage, userRequestStatus, userIsEdit, dispatch]);
 
   const handlerFormSubmit = (data) => {
     dispatch(fetchUpdateUserProfile(data));
