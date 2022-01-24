@@ -30,6 +30,7 @@ const ArticlePreview = (props) => {
     setModalIsOpen(false);
     navigate('/articles', { replace: true });
   };
+  console.log('userLoggedIn', !!userLoggedIn);
 
   return (
     <>
@@ -41,7 +42,11 @@ const ArticlePreview = (props) => {
                 {article.title}
               </Typography>
             </Link>
-            <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} />
+            <Checkbox
+              icon={<FavoriteBorder />}
+              checkedIcon={<Favorite sx={{ color: 'red' }} />}
+              disabled={!userLoggedIn}
+            />
             <Typography sx={{ mr: '5px' }}>{article.favoritesCount}</Typography>
           </Grid>
           {article.tagList.map(

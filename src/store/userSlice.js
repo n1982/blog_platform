@@ -23,8 +23,11 @@ export const fetchLoginUser = createAsyncThunk(
       )
       .then((res) => res.data)
       .catch((err) => {
-        console.log('error login user', err.response);
-        return rejectWithValue({ status: err.response.status, statusText: 'Логин или пароль не верные' });
+        console.log('err.response', err.response);
+        return rejectWithValue({
+          status: err.response.status,
+          statusText: err?.response?.data?.errors?.message || 'Логин или пароль не верные',
+        });
       });
   }
 );
@@ -35,7 +38,7 @@ export const fetchCreateUser = createAsyncThunk(
   async ({ userName: username, email, password }, { _, rejectWithValue }) => {
     return axios
       .post(
-        `https://kata.academy:8021/api/users`,
+        `https://kata.academy:8021/api/users1`,
         {
           user: {
             username,
@@ -49,8 +52,7 @@ export const fetchCreateUser = createAsyncThunk(
       )
       .then((res) => res.data)
       .catch((err) => {
-        console.log('error login user', err.response.data);
-        return rejectWithValue(err.response.data);
+        return rejectWithValue({ status: err.response.status, statusText: err.response.message });
       });
   }
 );
@@ -80,8 +82,7 @@ export const fetchUpdateUserProfile = createAsyncThunk(
       )
       .then((res) => res.data)
       .catch((err) => {
-        console.log('error login user', err.response.data);
-        return rejectWithValue(err.response.data);
+        return rejectWithValue({ status: err.response.status, statusText: err.response.message });
       });
   }
 );
@@ -95,6 +96,7 @@ const userSlice = createSlice({
     image: '',
     userRequestStatus: null,
     errorUserServer: null,
+    userIsUpdate: false,
   },
   reducers: {
     logOut(state) {
@@ -105,19 +107,28 @@ const userSlice = createSlice({
       state.image = '';
       state.userRequestStatus = '';
     },
+    setUserIsNotUpdate(state) {
+      state.userIsUpdate = false;
+    },
+    resetUserError(state) {
+      state.errorUserServer = null;
+    },
   },
   extraReducers: {
     [fetchLoginUser.pending]: (state) => {
       state.userRequestStatus = 'pending';
       state.errorUserServer = null;
+      state.userIsUpdate = false;
     },
     [fetchCreateUser.pending]: (state) => {
       state.userRequestStatus = 'pending';
       state.errorUserServer = null;
+      state.userIsUpdate = false;
     },
     [fetchUpdateUserProfile.pending]: (state) => {
       state.userRequestStatus = 'pending';
       state.errorUserServer = null;
+      state.userIsUpdate = false;
     },
 
     [fetchLoginUser.fulfilled]: (state, action) => {
@@ -134,6 +145,7 @@ const userSlice = createSlice({
     },
     [fetchUpdateUserProfile.fulfilled]: (state) => {
       state.userRequestStatus = 'fulfilled';
+      state.userIsUpdate = true;
     },
 
     [fetchLoginUser.rejected]: (state, action) => {
@@ -149,13 +161,15 @@ const userSlice = createSlice({
     },
 
     [fetchUpdateUserProfile.rejected]: (state, action) => {
-      console.log('User not updated, error!!!', action.payload.errors);
+      console.log('User not updated, error!!!', action.payload);
+      state.errorUserServer = action.payload;
       state.userRequestStatus = 'rejected';
+      state.userIsUpdate = false;
     },
   },
 });
 
 // eslint-disable-next-line no-empty-pattern
-export const { logOut } = userSlice.actions;
+export const { logOut, setUserIsNotUpdate, resetUserError } = userSlice.actions;
 
 export default userSlice.reducer;

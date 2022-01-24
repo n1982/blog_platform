@@ -7,6 +7,7 @@ import { fetchCreateUser } from '../store/userSlice';
 
 const SignUp = () => {
   const dispatch = useDispatch();
+
   const handlerFormSubmit = (data) => {
     dispatch(fetchCreateUser(data));
   };
