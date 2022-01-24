@@ -38,7 +38,7 @@ export const fetchCreateUser = createAsyncThunk(
   async ({ userName: username, email, password }, { _, rejectWithValue }) => {
     return axios
       .post(
-        `https://kata.academy:8021/api/users1`,
+        `https://kata.academy:8021/api/users`,
         {
           user: {
             username,
@@ -165,6 +165,7 @@ const userSlice = createSlice({
       console.log('User not created, error!!!', action.payload);
       state.errorUserServer = action.payload;
       state.userRequestStatus = 'rejected';
+      state.userIsEdit = false;
     },
 
     [fetchUpdateUserProfile.rejected]: (state, action) => {
