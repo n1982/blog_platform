@@ -97,6 +97,42 @@ export const fetchDeleteArticle = createAsyncThunk('articles/fetchDeleteArticle'
     })
 );
 
+export const fetchSetFavoriteArticle = createAsyncThunk(
+  'articles/fetchSetFavoriteArticle',
+  async (slug, { rejectWithValue }) =>
+    axios
+      .post(
+        `https://kata.academy:8021/api/articles/${slug}/favorite`,
+        {},
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Token ${getCookie('token')}`,
+          },
+        }
+      )
+      .then((res) => res.data)
+      .catch((err) => {
+        return rejectWithValue({ status: err.response.status, statusText: err.response.statusText });
+      })
+);
+
+export const fetchDeleteFavoriteArticle = createAsyncThunk(
+  'articles/fetchDeleteFavoriteArticle',
+  async (slug, { rejectWithValue }) =>
+    axios
+      .delete(`https://kata.academy:8021/api/articles/${slug}/favorite`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Token ${getCookie('token')}`,
+        },
+      })
+      .then((res) => res.data)
+      .catch((err) => {
+        return rejectWithValue({ status: err.response.status, statusText: err.response.statusText });
+      })
+);
+
 const articleSlice = createSlice({
   name: 'articles',
   initialState: {
@@ -111,7 +147,6 @@ const articleSlice = createSlice({
   extraReducers: {
     // Запрос отправлен
     [fetchGetArticles.pending]: (state, action) => {
-      console.log();
       state.articleRequestStatus = 'pending';
       state.errorArticleServer = null;
       state.articleIsCreated = false;
@@ -135,6 +170,12 @@ const articleSlice = createSlice({
       state.articleRequestStatus = 'pending';
       state.errorArticleServer = null;
     },
+    [fetchSetFavoriteArticle.pending]: (state, action) => {
+      console.log('Отправка запроса на добавление в избранное');
+    },
+    [fetchDeleteFavoriteArticle.pending]: (state, action) => {
+      console.log('Отправка запроса на удаление из избранного');
+    },
     // Успешный запрос
     [fetchGetArticles.fulfilled]: (state, action) => {
       state.articles = [...action.payload.articles];
@@ -147,20 +188,23 @@ const articleSlice = createSlice({
     },
 
     [fetchCreateArticle.fulfilled]: (state) => {
-      console.log('article created');
       state.articleRequestStatus = 'fulfilled';
       state.articleIsCreated = true;
     },
 
     [fetchEditArticle.fulfilled]: (state) => {
-      console.log('article edit');
       state.articleRequestStatus = 'fulfilled';
       state.articleIsCreated = true;
     },
 
     [fetchDeleteArticle.fulfilled]: (state) => {
-      console.log('delete article successful');
       state.articleRequestStatus = 'fulfilled';
+    },
+    [fetchSetFavoriteArticle.fulfilled]: (state, action) => {
+      console.log('Успешный запрос на добавление в избранное');
+    },
+    [fetchDeleteFavoriteArticle.fulfilled]: (state, action) => {
+      console.log('Успешный запрос на удаление из избранного');
     },
     // Ошибка в запросе
     [fetchGetArticles.rejected]: (state, action) => {
@@ -181,6 +225,14 @@ const articleSlice = createSlice({
     },
 
     [fetchDeleteArticle.rejected]: (state, action) => {
+      state.errorArticleServer = action.payload;
+      state.articleRequestStatus = 'rejected';
+    },
+    [fetchSetFavoriteArticle.rejected]: (state, action) => {
+      state.errorArticleServer = action.payload;
+      state.articleRequestStatus = 'rejected';
+    },
+    [fetchDeleteFavoriteArticle.rejected]: (state, action) => {
       state.errorArticleServer = action.payload;
       state.articleRequestStatus = 'rejected';
     },

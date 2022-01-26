@@ -9,7 +9,7 @@ import { Favorite, FavoriteBorder } from '@mui/icons-material';
 
 import ModalWindow from './ModalWindow';
 
-import { fetchDeleteArticle } from '../store/articleSlice';
+import { fetchDeleteArticle, fetchDeleteFavoriteArticle, fetchSetFavoriteArticle } from '../store/articleSlice';
 import formatDate from '../utilites/formatDate';
 import uniqKey from '../utilites/uniqKey';
 import avatarPicture from '../assets/img/Avatar.png';
@@ -21,16 +21,33 @@ const ArticlePreview = (props) => {
   const userCreatorArticle = article.author.username;
   const userLoggedIn = useSelector((state) => state.user.username);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-
+  const [checkFavorite, setCheckFavorite] = useState(article?.favorited || false);
+  const [favoriteCount, setFavoriteCount] = useState(article.favoritesCount);
   const openModal = () => setModalIsOpen(true);
+
   const closeModal = () => setModalIsOpen(false);
 
+  const handleCheckboxClick = (event) => {
+    console.log('article.slug', article.slug);
+
+    if (event.target.checked) {
+      console.log('Добавили в избранное');
+      dispatch(fetchSetFavoriteArticle(article.slug));
+      setCheckFavorite(true);
+      setFavoriteCount(favoriteCount + 1);
+    } else {
+      console.log('Удалили из избранного');
+      dispatch(fetchDeleteFavoriteArticle(article.slug));
+      setCheckFavorite(false);
+      setFavoriteCount(favoriteCount - 1);
+    }
+  };
+  console.log('article.favorited', article.favorited);
   const deleteArticle = () => {
     dispatch(fetchDeleteArticle(article.slug));
     setModalIsOpen(false);
     navigate('/articles', { replace: true });
   };
-  console.log('userLoggedIn', !!userLoggedIn);
 
   return (
     <>
@@ -46,8 +63,10 @@ const ArticlePreview = (props) => {
               icon={<FavoriteBorder />}
               checkedIcon={<Favorite sx={{ color: 'red' }} />}
               disabled={!userLoggedIn}
+              checked={checkFavorite}
+              onClick={(event) => handleCheckboxClick(event)}
             />
-            <Typography sx={{ mr: '5px' }}>{article.favoritesCount}</Typography>
+            <Typography sx={{ mr: '5px' }}>{favoriteCount}</Typography>
           </Grid>
           {article.tagList.map(
             (tag) => tag && <Chip key={uniqKey()} label={tag} variant="outlined" size="small" sx={{ mr: 1 }} />
