@@ -77,7 +77,6 @@ const UserForm = ({ signUp, user, handlerFormSubmit }) => {
             variant="outlined"
             size="small"
             fullWidth
-            required
             sx={{
               mb: 1,
             }}
@@ -93,7 +92,6 @@ const UserForm = ({ signUp, user, handlerFormSubmit }) => {
             label="Email address"
             size="small"
             fullWidth
-            required
             sx={{
               mb: 1,
             }}
@@ -109,7 +107,6 @@ const UserForm = ({ signUp, user, handlerFormSubmit }) => {
             variant="outlined"
             size="small"
             fullWidth
-            required
             sx={{
               mb: 1,
             }}
@@ -162,7 +159,7 @@ const UserForm = ({ signUp, user, handlerFormSubmit }) => {
 information"
               />
               {!!errors?.acceptPersonalInf && (
-                <Typography variant="caption" display="block" gutterBottom sx={{ color: 'tomato' }}>
+                <Typography variant="caption" display="block" gutterBottom sx={{ color: 'red' }}>
                   {errors?.acceptPersonalInf?.message}
                 </Typography>
               )}

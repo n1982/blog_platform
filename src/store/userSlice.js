@@ -139,16 +139,17 @@ const userSlice = createSlice({
     },
 
     [fetchLoginUser.fulfilled]: (state, action) => {
+      state.userRequestStatus = 'fulfilled';
       state.username = action.payload.user.username;
       state.email = action.payload.user.email;
       state.bio = action.payload.user.bio;
       state.image = action.payload.user.image;
       document.cookie = `token = ${action.payload.user.token}`;
-
-      state.userRequestStatus = 'fulfilled';
+      state.userIsEdit = true;
     },
     [fetchCreateUser.fulfilled]: (state) => {
       state.userRequestStatus = 'fulfilled';
+      state.userIsEdit = true;
     },
     [fetchUpdateUserProfile.fulfilled]: (state) => {
       state.userRequestStatus = 'fulfilled';

@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { fetchCreateUser } from '../store/userSlice';
+import { fetchCreateUser, setUserIsNotEdit } from '../store/userSlice';
 import UserForm from '../components/UserForm';
 import ErrorMessage from '../components/ErrorMessage';
 
@@ -12,13 +12,16 @@ const SignUp = () => {
   const location = useLocation();
   const userRequestStatus = useSelector((state) => state.user.userRequestStatus);
   const errorUserServer = useSelector((state) => state.user.errorUserServer);
+  const userIsEdit = useSelector((state) => state.user.userIsEdit);
+
   const fromPage = location.state?.from?.pathname || '/';
 
   useEffect(() => {
-    if (userRequestStatus === 'fulfilled') {
+    if (userRequestStatus === 'fulfilled' && userIsEdit) {
       navigate(fromPage, { replace: true });
+      dispatch(setUserIsNotEdit());
     }
-  }, [navigate, fromPage, userRequestStatus]);
+  }, [dispatch, navigate, fromPage, userRequestStatus, userIsEdit]);
 
   const handlerFormSubmit = (data) => {
     dispatch(fetchCreateUser(data));
