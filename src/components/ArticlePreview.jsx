@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Avatar, Box, Button, Checkbox, Chip, Grid, Typography } from '@mui/material';
@@ -84,7 +83,7 @@ const ArticlePreview = (props) => {
           </Typography>
         </Grid>
         <Grid item xs={3}>
-          <Grid container direction="row-reverse">
+          <Grid container direction="row-reverse" sx={{ mb: 3 }}>
             <Avatar alt="Avatar" src={article.author.image || avatarPicture} sx={{ width: 46, height: 46 }} />
             <Box sx={{ mr: 1 }}>
               <Typography variant="h6" align="right">
@@ -97,18 +96,17 @@ const ArticlePreview = (props) => {
           </Grid>
 
           {singlePage && userLoggedIn === userCreatorArticle && (
-            <>
+            <Box sx={{ display: 'flex', justifyContent: 'right' }}>
+              <Button color="error" variant="outlined" sx={{ textTransform: 'none', mr: 3 }} onClick={openModal}>
+                Delete
+              </Button>
               {/* eslint-disable-next-line react/jsx-curly-brace-presence */}
-              <Link to={`edit`}>
+              <Link to="edit" style={{ textDecoration: 'none' }}>
                 <Button color="success" variant="outlined" sx={{ textTransform: 'none' }}>
                   Edit
                 </Button>
               </Link>
-
-              <Button color="error" variant="outlined" sx={{ textTransform: 'none', mr: 1 }} onClick={openModal}>
-                Delete
-              </Button>
-            </>
+            </Box>
           )}
         </Grid>
       </Grid>

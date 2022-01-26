@@ -172,7 +172,7 @@ information"
             variant="contained"
             fullWidth
             sx={{
-              mb: 2,
+              my: 2,
             }}
           >
             {buttonLabel}
