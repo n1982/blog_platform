@@ -1,12 +1,14 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+
+import { Box, Button, Container, Divider, Paper, TextField, Typography } from '@mui/material';
+
 import * as Yup from 'yup';
-import { Box, Button, Divider, Paper, TextField, Typography } from '@mui/material';
+import { yupResolver } from '@hookform/resolvers/yup';
+
 import uniqKey from '../utilites/uniqKey';
 
-// eslint-disable-next-line no-unused-vars
 const ArticleForm = ({ article, handlerFormSubmit }) => {
   const validationSchema = Yup.object().shape({
     title: Yup.string().required('Поле "Title" должно быть заполнено'),
@@ -26,12 +28,12 @@ const ArticleForm = ({ article, handlerFormSubmit }) => {
     mode: 'onBlur',
     resolver: yupResolver(validationSchema),
   });
+
   const [tagList, setTagList] = useState(article?.tagList || []);
   const [tagValue, setTagValue] = useState('');
 
   const onSubmit = (data) => {
     handlerFormSubmit({ ...data }, tagList);
-    // navigate(fromPage, { replace: true });
   };
 
   const handleClickAddTag = () => {
@@ -44,10 +46,9 @@ const ArticleForm = ({ article, handlerFormSubmit }) => {
   };
 
   return (
-    <Box
+    <Container
       sx={{
         m: 'auto',
-        mt: 10,
         maxWidth: '1440px',
       }}
     >
@@ -102,7 +103,7 @@ const ArticleForm = ({ article, handlerFormSubmit }) => {
             id="text"
             label="Text"
             variant="outlined"
-            size="small"
+            minRows={6}
             multiline
             fullWidth
             required
@@ -157,7 +158,7 @@ const ArticleForm = ({ article, handlerFormSubmit }) => {
           >
             Add Tag
           </Button>
-          <Divider />
+          <Divider sx={{ mb: 2 }} />
           <Button
             type="submit"
             variant="contained"
@@ -166,13 +167,12 @@ const ArticleForm = ({ article, handlerFormSubmit }) => {
               textTransform: 'none',
               width: '50%',
             }}
-            // onClick={(event) => handleClickSendButton(event, title, description, text, tagList)}
           >
             Send
           </Button>
         </Paper>
       </form>
-    </Box>
+    </Container>
   );
 };
 

@@ -1,48 +1,48 @@
-/* eslint-disable react/prop-types,no-unused-vars */
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { Avatar, Box, Button, Checkbox, Chip, Grid, Typography } from '@mui/material';
 import { Favorite, FavoriteBorder } from '@mui/icons-material';
+import { fetchDeleteArticle, fetchDeleteFavoriteArticle, fetchSetFavoriteArticle } from '../store/articleSlice';
 
 import ModalWindow from './ModalWindow';
-
-import { fetchDeleteArticle, fetchDeleteFavoriteArticle, fetchSetFavoriteArticle } from '../store/articleSlice';
 import formatDate from '../utilites/formatDate';
 import uniqKey from '../utilites/uniqKey';
+
 import avatarPicture from '../assets/img/Avatar.png';
 
 const ArticlePreview = (props) => {
   const dispatch = useDispatch();
-  const { article, singlePage } = props;
+
   const navigate = useNavigate();
-  const userCreatorArticle = article.author.username;
+
+  const { article, singlePage } = props;
+
   const userLoggedIn = useSelector((state) => state.user.username);
+
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [checkFavorite, setCheckFavorite] = useState(article?.favorited || false);
   const [favoriteCount, setFavoriteCount] = useState(article.favoritesCount);
-  const openModal = () => setModalIsOpen(true);
+
+  const userCreatorArticle = article.author.username;
 
   const closeModal = () => setModalIsOpen(false);
 
-  const handleCheckboxClick = (event) => {
-    console.log('article.slug', article.slug);
+  const openModal = () => setModalIsOpen(true);
 
+  const handleCheckboxClick = (event) => {
     if (event.target.checked) {
-      console.log('Добавили в избранное');
       dispatch(fetchSetFavoriteArticle(article.slug));
       setCheckFavorite(true);
       setFavoriteCount(favoriteCount + 1);
     } else {
-      console.log('Удалили из избранного');
       dispatch(fetchDeleteFavoriteArticle(article.slug));
       setCheckFavorite(false);
       setFavoriteCount(favoriteCount - 1);
     }
   };
-  console.log('article.favorited', article.favorited);
+
   const deleteArticle = () => {
     dispatch(fetchDeleteArticle(article.slug));
     setModalIsOpen(false);
@@ -51,14 +51,21 @@ const ArticlePreview = (props) => {
 
   return (
     <>
-      <Grid container columnSpacing={2}>
-        <Grid item xs={10}>
-          <Grid container direction="row" justifyContent="flex-start" alignItems="center" sx={{ mb: 1 }}>
-            <Link to={`${article.slug}`}>
-              <Typography variant="h5" color="#1890FF" sx={{ mr: '5px' }}>
+      <Grid container sx={{ p: 2 }}>
+        <Grid item xs={9}>
+          <Grid container direction="row" justifyContent="flex-start" alignItems="center" sx={{ mb: 1, gap: 1 }}>
+            {!singlePage && (
+              <Link to={`${article.slug}`} style={{ textDecoration: 'none' }}>
+                <Typography variant="h5" color="#1890FF">
+                  {article.title}
+                </Typography>
+              </Link>
+            )}
+            {singlePage && (
+              <Typography variant="h5" color="#1890FF">
                 {article.title}
               </Typography>
-            </Link>
+            )}
             <Checkbox
               icon={<FavoriteBorder />}
               checkedIcon={<Favorite sx={{ color: 'red' }} />}
@@ -71,35 +78,35 @@ const ArticlePreview = (props) => {
           {article.tagList.map(
             (tag) => tag && <Chip key={uniqKey()} label={tag} variant="outlined" size="small" sx={{ mr: 1 }} />
           )}
-          {/* todo добавить overflow-hiden */}
           <Typography align="justify" sx={{ mt: 1 }}>
             {article.description}
           </Typography>
         </Grid>
-        <Grid item xs={2}>
-          <Grid container direction="row-reverse">
+        <Grid item xs={3}>
+          <Grid container direction="row-reverse" sx={{ mb: 3 }}>
             <Avatar alt="Avatar" src={article.author.image || avatarPicture} sx={{ width: 46, height: 46 }} />
-            <Box>
-              <Typography variant="h6">{article.author.username}</Typography>
-              <Typography variant="body2" sx={{ color: '#808080' }}>
+            <Box sx={{ mr: 1 }}>
+              <Typography variant="h6" align="right">
+                {article.author.username}
+              </Typography>
+              <Typography variant="body2" align="right" sx={{ color: '#808080' }}>
                 {formatDate(article.createdAt)}
               </Typography>
             </Box>
           </Grid>
 
-          {/* отображать если пользователь создал статью */}
           {singlePage && userLoggedIn === userCreatorArticle && (
-            // eslint-disable-next-line react/jsx-curly-brace-presence
-            <Link to={`edit`}>
-              <Button color="success" variant="outlined" sx={{ textTransform: 'none' }}>
-                Edit
+            <Box sx={{ display: 'flex', justifyContent: 'right' }}>
+              <Button color="error" variant="outlined" sx={{ textTransform: 'none', mr: 3 }} onClick={openModal}>
+                Delete
               </Button>
-            </Link>
-          )}
-          {singlePage && userLoggedIn === userCreatorArticle && (
-            <Button color="error" variant="outlined" sx={{ textTransform: 'none', mr: 1 }} onClick={openModal}>
-              Delete
-            </Button>
+              {/* eslint-disable-next-line react/jsx-curly-brace-presence */}
+              <Link to="edit" style={{ textDecoration: 'none' }}>
+                <Button color="success" variant="outlined" sx={{ textTransform: 'none' }}>
+                  Edit
+                </Button>
+              </Link>
+            </Box>
           )}
         </Grid>
       </Grid>
