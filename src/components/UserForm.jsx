@@ -1,8 +1,10 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import { Box, Button, Checkbox, Divider, FormControlLabel, Paper, TextField, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+
+import { Box, Button, Checkbox, Divider, FormControlLabel, Paper, TextField, Typography } from '@mui/material';
+
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
@@ -43,6 +45,7 @@ const UserForm = ({ signUp, user, handlerFormSubmit }) => {
   const onSubmit = (data) => {
     handlerFormSubmit({ ...data });
   };
+
   return (
     <Box
       sx={{
@@ -146,14 +149,13 @@ const UserForm = ({ signUp, user, handlerFormSubmit }) => {
             />
           )}
           {signUp && (
-            <Divider
-              sx={{
-                mb: 1,
-              }}
-            />
-          )}
-          {signUp && (
             <>
+              <Divider
+                sx={{
+                  mb: 1,
+                }}
+              />
+
               <FormControlLabel
                 control={<Checkbox {...register('acceptPersonalInf')} />}
                 label="I agree to the processing of my personal
@@ -180,7 +182,7 @@ information"
 
           {signUp && (
             <Typography variant="body2" justify="center" align="center">
-              Already have an account? <Link to="/sign-in">Sign In</Link>.
+              Already have an account? <Link to="/sign-in">Sign In.</Link>
             </Typography>
           )}
         </Paper>
