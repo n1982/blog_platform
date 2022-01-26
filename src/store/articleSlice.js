@@ -12,6 +12,10 @@ export const fetchGetArticles = createAsyncThunk(
           limit,
           offset,
         },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Token ${getCookie('token')}`,
+        },
       })
       .then((res) => res.data)
       .catch((err) => {
@@ -146,34 +150,34 @@ const articleSlice = createSlice({
   reducers: {},
   extraReducers: {
     // Запрос отправлен
-    [fetchGetArticles.pending]: (state, action) => {
+    [fetchGetArticles.pending]: (state) => {
       state.articleRequestStatus = 'pending';
       state.errorArticleServer = null;
       state.articleIsCreated = false;
     },
-    [fetchSingleArticle.pending]: (state, action) => {
+    [fetchSingleArticle.pending]: (state) => {
       state.articleRequestStatus = 'pending';
       state.errorArticleServer = null;
       state.articleIsCreated = false;
     },
-    [fetchCreateArticle.pending]: (state, action) => {
+    [fetchCreateArticle.pending]: (state) => {
       state.articleRequestStatus = 'pending';
       state.errorArticleServer = null;
       state.articleIsCreated = false;
     },
-    [fetchEditArticle.pending]: (state, action) => {
+    [fetchEditArticle.pending]: (state) => {
       state.articleRequestStatus = 'pending';
       state.errorArticleServer = null;
       state.articleIsCreated = false;
     },
-    [fetchDeleteArticle.pending]: (state, action) => {
+    [fetchDeleteArticle.pending]: (state) => {
       state.articleRequestStatus = 'pending';
       state.errorArticleServer = null;
     },
-    [fetchSetFavoriteArticle.pending]: (state, action) => {
+    [fetchSetFavoriteArticle.pending]: () => {
       console.log('Отправка запроса на добавление в избранное');
     },
-    [fetchDeleteFavoriteArticle.pending]: (state, action) => {
+    [fetchDeleteFavoriteArticle.pending]: () => {
       console.log('Отправка запроса на удаление из избранного');
     },
     // Успешный запрос
