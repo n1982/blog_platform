@@ -3,7 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Pagination, Paper, Stack } from '@mui/material';
+
 import { fetchGetArticles } from '../store/articleSlice';
+
 import ArticlePreview from '../components/ArticlePreview';
 import Spinner from '../components/Spinner';
 import ErrorMessage from '../components/ErrorMessage';
